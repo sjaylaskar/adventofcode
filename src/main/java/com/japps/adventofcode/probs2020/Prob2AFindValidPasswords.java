@@ -6,8 +6,6 @@
 package com.japps.adventofcode.probs2020;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
@@ -61,7 +59,7 @@ public final class Prob2AFindValidPasswords extends AbstractSolvable implements 
      */
     private long findValidPasswords() throws IOException {
 
-        return Files.lines(Paths.get(determineInputFilePath())).filter(this::isValid).count();
+        return lines().stream().filter(this::isValid).count();
     }
 
     /**

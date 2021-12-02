@@ -6,10 +6,6 @@
 package com.japps.adventofcode.probs2021;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
@@ -73,12 +69,9 @@ public final class Prob2ASubmarineDepthFinder extends AbstractSolvable implement
      */
     private long findProductOfHorizontalAndVerticalDepth() throws IOException {
 
-        final List<String> lines = Files.lines(Paths.get(determineInputFilePath()))
-            .collect(Collectors.toList());
-
         long horizontal = 0;
         long depth = 0;
-        for (final String line : lines) {
+        for (final String line : lines()) {
             final String[] actions = line.split(SPACE);
             final String action = actions[0];
             final long actionMove = Long.parseLong(actions[1]);

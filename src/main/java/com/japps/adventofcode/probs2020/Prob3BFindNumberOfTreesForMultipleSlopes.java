@@ -6,12 +6,9 @@
 package com.japps.adventofcode.probs2020;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
@@ -65,7 +62,7 @@ public final class Prob3BFindNumberOfTreesForMultipleSlopes extends AbstractSolv
      */
     private long findNumberOfTrees() throws IOException {
 
-        return countTrees(Files.lines(Paths.get(determineInputFilePath())).collect(Collectors.toList()));
+        return countTrees(lines());
     }
 
     /**

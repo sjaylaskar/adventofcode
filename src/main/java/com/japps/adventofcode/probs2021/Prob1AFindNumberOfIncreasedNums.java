@@ -6,8 +6,6 @@
 package com.japps.adventofcode.probs2021;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,7 +61,7 @@ public final class Prob1AFindNumberOfIncreasedNums extends AbstractSolvable impl
      */
     private int findNumberOfIncreasedNums() throws IOException {
 
-        final List<Integer> nums = Files.lines(Paths.get(determineInputFilePath()))
+        final List<Integer> nums = lines().stream()
             .map(Integer::parseInt).collect(Collectors.toList());
 
         int count = 0;

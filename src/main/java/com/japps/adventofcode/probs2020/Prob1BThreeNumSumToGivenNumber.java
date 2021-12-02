@@ -6,8 +6,6 @@
 package com.japps.adventofcode.probs2020;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -66,7 +64,7 @@ public final class Prob1BThreeNumSumToGivenNumber extends AbstractSolvable imple
      */
     private long findThreeNumProductThatSumToGivenNum(final int givenSumNum) throws IOException {
 
-        final List<Integer> nums = Files.lines(Paths.get(determineInputFilePath())).filter(line -> Integer.parseInt(line) <= givenSumNum)
+        final List<Integer> nums = lines().stream().filter(line -> Integer.parseInt(line) <= givenSumNum)
             .map(Integer::parseInt).collect(Collectors.toList());
 
         for (int i = 0; i <= nums.size() - 2; i++) {

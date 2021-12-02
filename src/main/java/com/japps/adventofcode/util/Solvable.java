@@ -5,6 +5,12 @@
 */
 package com.japps.adventofcode.util;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * The solvable.
@@ -16,5 +22,12 @@ public interface Solvable {
 
     default String determineInputFilePath() {
         return ProblemSolverUtil.determineInputFilePath(getClass());
+    }
+
+    default List<String> lines() throws IOException {
+
+        try (final Stream<String> fileLinesStream = Files.lines(Paths.get(determineInputFilePath()))) {
+            return fileLinesStream.collect(Collectors.toList());
+        }
     }
 }

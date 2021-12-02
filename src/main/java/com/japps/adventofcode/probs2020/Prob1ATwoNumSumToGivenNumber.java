@@ -6,8 +6,6 @@
 package com.japps.adventofcode.probs2020;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -63,7 +61,7 @@ public final class Prob1ATwoNumSumToGivenNumber extends AbstractSolvable impleme
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private int findTwoNumProductThatSumToGivenNum(final int givenSumNum) throws IOException {
-        final List<Integer> nums = Files.lines(Paths.get(determineInputFilePath())).filter(line -> Integer.parseInt(line) <= givenSumNum)
+        final List<Integer> nums = lines().stream().filter(line -> Integer.parseInt(line) <= givenSumNum)
             .map(Integer::parseInt).collect(Collectors.toList());
 
         final Integer starNum = nums.stream().filter(num -> nums.contains(givenSumNum - num)).findFirst().orElse(-1);
@@ -71,5 +69,4 @@ public final class Prob1ATwoNumSumToGivenNumber extends AbstractSolvable impleme
         Loggable.INFO(Prob1ATwoNumSumToGivenNumber.class, starNum);
         return (starNum != -1) ? starNum * (givenSumNum - starNum) : -1;
     }
-
 }

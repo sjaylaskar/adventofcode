@@ -6,14 +6,11 @@
 package com.japps.adventofcode.probs2021;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
-import com.japps.adventofcode.util.ProblemSolverUtil;
 
 /**
  * The prob 1 B find number of increased 3 nums.
@@ -62,7 +59,7 @@ public final class Prob1BFindNumberOfIncreased3Nums extends AbstractSolvable imp
      */
     private int findNumberOfIncreased3Nums() throws IOException {
 
-        final List<Integer> nums = Files.lines(Paths.get(ProblemSolverUtil.determineInputFilePath(Prob1BFindNumberOfIncreased3Nums.class)))
+        final List<Integer> nums = lines().stream()
             .map(Integer::parseInt).collect(Collectors.toList());
 
         int count = 0;
