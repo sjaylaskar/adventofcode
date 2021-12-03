@@ -30,4 +30,9 @@ public interface Solvable {
             return fileLinesStream.collect(Collectors.toList());
         }
     }
+
+    default long decimalize(final String binaryString) {
+
+        return Long.parseLong(binaryString, 2);
+    }
 }
