@@ -20,10 +20,21 @@ import java.util.stream.Stream;
  */
 public interface Solvable {
 
+    /**
+     * Determines the input file path.
+     *
+     * @return the input file path
+     */
     default String determineInputFilePath() {
         return ProblemSolverUtil.determineInputFilePath(getClass());
     }
 
+    /**
+     * Lines.
+     *
+     * @return the list of lines
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
     default List<String> lines() throws IOException {
 
         try (final Stream<String> fileLinesStream = Files.lines(Paths.get(determineInputFilePath()))) {
@@ -31,6 +42,12 @@ public interface Solvable {
         }
     }
 
+    /**
+     * Decimalize.
+     *
+     * @param binaryString the binary string
+     * @return the decimal value
+     */
     default long decimalize(final String binaryString) {
 
         return Long.parseLong(binaryString, 2);
