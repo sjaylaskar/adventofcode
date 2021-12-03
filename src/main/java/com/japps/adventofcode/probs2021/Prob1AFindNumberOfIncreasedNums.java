@@ -53,10 +53,9 @@ public final class Prob1AFindNumberOfIncreasedNums extends AbstractSolvable impl
     }
 
     /**
-     * Finds the two num product that sum to given num.
+     * Finds the number of increased nums.
      *
-     * @param givenSumNum the given sum num
-     * @return the two num product that sum to given num
+     * @return the number of increased nums
      * @throws IOException Signals that an I/O exception has occurred.
      */
     private int findNumberOfIncreasedNums() throws IOException {

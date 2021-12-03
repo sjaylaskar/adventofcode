@@ -64,9 +64,7 @@ public final class Prob1BFindNumberOfIncreased3Nums extends AbstractSolvable imp
 
         int count = 0;
         for (int i = 1; i < nums.size() - 2; i++) {
-            final int prevSum = nums.get(i - 1) + nums.get(i) + nums.get(i + 1);
-            final int currSum = nums.get(i) + nums.get(i + 1) + nums.get(i + 2);
-            if (currSum > prevSum) {
+            if (nums.get(i + 2) > nums.get(i - 1)) {
                 count++;
             }
         }
