@@ -26,12 +26,25 @@ import com.japps.adventofcode.util.Loggable;
  */
 public final class Prob7AShinyGoldBagContainerCounter extends AbstractSolvable implements Loggable {
 
+    /** The contain. */
     private static final String CONTAIN = "contain";
+
+    /** The bags. */
     private static final String BAGS = "bags";
+
+    /** The bag. */
     private static final String BAG = "bag";
+
+    /** The dot. */
     private static final String DOT = ".";
+
+    /** The regex digit. */
     private static final String REGEX_DIGIT = "\\d";
+
+    /** The comma. */
     private static final String COMMA = ",";
+
+    /** The shiny gold. */
     private static final String SHINY_GOLD = "shiny gold";
 
     /** The instance. */
@@ -101,6 +114,13 @@ public final class Prob7AShinyGoldBagContainerCounter extends AbstractSolvable i
         return shinyGoldContainerSet.size();
     }
 
+    /**
+     * Adds the all possible containers.
+     *
+     * @param shinyGoldContainer the shiny gold container
+     * @param containerMap the container map
+     * @param shinyGoldContainers the shiny gold containers
+     */
     private void addAllPossibleContainers(final String shinyGoldContainer, final Map<String, Set<String>> containerMap, final Set<String> shinyGoldContainers) {
         if (!containerMap.containsKey(shinyGoldContainer)) {
             return;

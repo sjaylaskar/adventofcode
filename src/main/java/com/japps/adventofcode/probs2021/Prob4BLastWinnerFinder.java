@@ -9,14 +9,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
 import java.util.Set;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import java.util.stream.Collectors;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
@@ -32,9 +32,6 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
 
     /** The regex comma. */
     private static final String REGEX_COMMA = ",";
-
-    /** The regex new line. */
-    private static final String REGEX_NEW_LINE = "\\n";
 
     /** The regex blank line. */
     private static final String REGEX_BLANK_LINE = "\\n\\n";
@@ -84,36 +81,27 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
         final String fileString = new String(Files.readAllBytes(Paths.get(determineInputFilePath())));
         final String[] linesSplit = fileString.split(REGEX_BLANK_LINE);
 
-        final String[] choose = linesSplit[0].split(REGEX_COMMA);
-
-        final List<String[]> matrices = new ArrayList<>();
-        final Map<Integer, List<int[]>> markedPositions = new HashMap<>();
-        for (int i = 1; i < linesSplit.length; i++) {
-            final String[] matrix = linesSplit[i].split(REGEX_NEW_LINE);
-            final String[] finalMat = new String[25];
-            int index = -1;
-            for (final String mat : matrix) {
-                final String[] mats = mat.split(StringUtils.SPACE);
-                for (final String m : mats) {
-                    if (NumberUtils.isCreatable(m)) {
-                        finalMat[++index] = m.trim();
-                    }
-                }
-            }
-            matrices.add(finalMat);
-        }
+        final List<Integer> chosenNumbers = Arrays.asList(linesSplit[0].split(REGEX_COMMA))
+            .stream()
+            .map(Integer::parseInt)
+            .collect(Collectors.toList());
 
         final List<int[][]> intMatrices = new ArrayList<>();
-        for (int i = 0; i < matrices.size(); i++) {
-            final String[] matrix = matrices.get(i);
+
+        for (int i = 1; i < linesSplit.length; i++) {
+            final Scanner scanner = new Scanner(linesSplit[i]);
             final int[][] intMatrix = new int[5][5];
-            int index = 0;
-            for (int j = 0; j < 5; j++) {
-                for (int k = 0; k < 5; k++) {
-                    intMatrix[j][k] = Integer.parseInt(matrix[index++]);
+            int row = 0, col = 0;
+            while (scanner.hasNext()) {
+                final int number = scanner.nextInt();
+                intMatrix[row][col++] = number;
+                if (col == 5) {
+                    row++;
+                    col = 0;
                 }
             }
             intMatrices.add(intMatrix);
+            scanner.close();
         }
 
         int winMatrixIndex = -1;
@@ -121,7 +109,9 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
         int countOfWins = 0;
         boolean lastWinnerFound = false;
         final Set<Integer> winIndices = new HashSet<>();
-        for (int i = 0; i < choose.length; i++) {
+        final Map<Integer, List<int[]>> markedPositions = new HashMap<>();
+
+        for (int i = 0; i < chosenNumbers.size(); i++) {
             if (lastWinnerFound) {
                 break;
             }
@@ -135,7 +125,7 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
                         break;
                     }
                     for (int p = 0; p < 5; p++) {
-                        if (intMatrix[k][p] == Integer.parseInt(choose[i])) {
+                        if (intMatrix[k][p] == chosenNumbers.get(i)) {
                             markedPositions.putIfAbsent(j, new ArrayList<>());
                             markedPositions.get(j).add(new int[] {k, p});
                         }
@@ -143,7 +133,7 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
                             if (markedPositions.containsKey(j)) {
                                 if (isRowOrColumnMarked(intMatrix, markedPositions.get(j))) {
                                     winMatrixIndex = j;
-                                    winNumber = Integer.parseInt(choose[i]);
+                                    winNumber = chosenNumbers.get(i);
                                     ++countOfWins;
                                     winIndices.add(winMatrixIndex);
                                     if (countOfWins == intMatrices.size()) {
@@ -219,10 +209,7 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
                     }
                 }
             }
-            if (rowMarkCount == 5) {
-                return true;
-            }
-            if (colMarkCount == 5) {
+            if (rowMarkCount == 5 || colMarkCount == 5) {
                 return true;
             }
         }

@@ -43,6 +43,17 @@ public interface Solvable {
     }
 
     /**
+     * Read file bytes.
+     *
+     * @return the byte[]
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    default byte[] readFileBytes() throws IOException {
+
+        return Files.readAllBytes(Paths.get(determineInputFilePath()));
+    }
+
+    /**
      * Decimalize.
      *
      * @param binaryString the binary string
