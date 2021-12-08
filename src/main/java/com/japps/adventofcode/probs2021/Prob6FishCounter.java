@@ -53,29 +53,28 @@ public final class Prob6FishCounter extends AbstractSolvable implements Loggable
     public static void main(final String[] args) {
 
         try {
-            INSTANCE.info(INSTANCE.countFish());
+            final List<String> lines = INSTANCE.lines();
+            INSTANCE.info(INSTANCE.countFish(lines, 80));
+            INSTANCE.info(INSTANCE.countFish(lines, 256));
         } catch (final IOException exception) {
             INSTANCE.error(exception.getLocalizedMessage());
         }
     }
 
     /**
-     * Counts the of fish.
+     * Counts the fish.
      *
-     * @return the count of of fish
+     * @param lines the lines
+     * @param numberOfDays the number of days
+     * @return the count of fish
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private long countFish() throws IOException {
-
-        final List<String> lines = lines();
+    private long countFish(final List<String> lines, final long numberOfDays) throws IOException {
 
         final Map<Long, Long> ageFrequencies = Arrays.asList(lines.get(0).split(","))
             .stream()
             .map(Long::parseLong)
             .collect(Collectors.groupingBy(value -> value, Collectors.counting()));
-
-        //final long numberOfDays = 80;
-        final long numberOfDays = 256;
 
         return calculateFishCount(ageFrequencies, numberOfDays);
     }
