@@ -1,0 +1,88 @@
+/*
+ * Id: Pair.java 09-Dec-2021 2:05:15 pm SubhajoyLaskar
+ * Copyright (©) 2021 Subhajoy Laskar
+ * https://www.linkedin.com/in/subhajoylaskar
+ */
+package com.japps.adventofcode.util;
+
+import java.util.Objects;
+
+
+/**
+ * The Pair.
+ *
+ * @author Subhajoy Laskar
+ * @version 1.0
+ */
+public class Pair {
+
+    /** The x. */
+    private final int x;
+
+    /** The y. */
+    private final int y;
+
+    /**
+     * Instantiates a new pair.
+     *
+     * @param x the x
+     * @param y the y
+     */
+    public Pair(final int x, final int y) {
+
+        this.x = x;
+        this.y = y;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(x, y);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean equals(final Object obj) {
+
+        if (this == obj) return true;
+        if (obj == null) return false;
+        if (getClass() != obj.getClass()) return false;
+        final Pair other = (Pair) obj;
+        return x == other.x && y == other.y;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+
+        return getClass().getSimpleName() + " [x=" + x + ", y=" + y + "]";
+    }
+
+    /**
+     * Gets the x.
+     *
+     * @return the x
+     */
+    public int getX() {
+
+        return x;
+    }
+
+    /**
+     * Gets the y.
+     *
+     * @return the y
+     */
+    public int getY() {
+
+        return y;
+    }
+
+}

@@ -1,13 +1,11 @@
 /*
- * Id: Prob4BLastWinnerFinder.java 30-Nov-2021 1:52:54 am SubhajoyLaskar
+ * Id: Prob4WinnerFinder.java 04-Dec-2021 10:30:57 am SubhajoyLaskar
  * Copyright (©) 2021 Subhajoy Laskar
  * https://www.linkedin.com/in/subhajoylaskar
  */
 package com.japps.adventofcode.probs2021;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -23,12 +21,12 @@ import com.japps.adventofcode.util.Loggable;
 
 
 /**
- * The prob 4 B last winner finder.
+ * The prob 4 winner finder.
  *
  * @author Subhajoy Laskar
  * @version 1.0
  */
-public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Loggable {
+public final class Prob4WinnerFinder extends AbstractSolvable implements Loggable {
 
     /** The regex comma. */
     private static final String REGEX_COMMA = ",";
@@ -37,23 +35,23 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
     private static final String REGEX_BLANK_LINE = "\\n\\n";
 
     /** The instance. */
-    private static final Prob4BLastWinnerFinder INSTANCE = instance();
+    private static final Prob4WinnerFinder INSTANCE = instance();
 
     /**
-     * Instantiates a new prob 4 B last winner finder.
+     * Instantiates a new prob 4 winner finder.
      */
-    private Prob4BLastWinnerFinder() {
+    private Prob4WinnerFinder() {
 
     }
 
     /**
      * Instance.
      *
-     * @return the prob 4 B last winner finder
+     * @return the prob 4 winner finder
      */
-    private static Prob4BLastWinnerFinder instance() {
+    private static Prob4WinnerFinder instance() {
 
-        return new Prob4BLastWinnerFinder();
+        return new Prob4WinnerFinder();
     }
 
     /**
@@ -64,21 +62,24 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
     public static void main(final String[] args) {
 
         try {
-            INSTANCE.info(INSTANCE.findLastWinner());
+            final String fileString = new String(INSTANCE.readFileBytes());
+            INSTANCE.info(INSTANCE.findWinner(fileString, false));
+            INSTANCE.info(INSTANCE.findWinner(fileString, true));
         } catch (final IOException exception) {
             INSTANCE.error(exception.getLocalizedMessage());
         }
     }
 
     /**
-     * Finds the last winner.
+     * Finds the winner.
      *
-     * @return the last winner
+     * @param fileString the file string
+     * @param isFindLastWinner the is find last winner
+     * @return the winner
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private long findLastWinner() throws IOException {
+    private long findWinner(final String fileString, final boolean isFindLastWinner) throws IOException {
 
-        final String fileString = new String(Files.readAllBytes(Paths.get(determineInputFilePath())));
         final String[] linesSplit = fileString.split(REGEX_BLANK_LINE);
 
         final List<Integer> chosenNumbers = Arrays.asList(linesSplit[0].split(REGEX_COMMA))
@@ -107,21 +108,22 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
         int winMatrixIndex = -1;
         int winNumber = -1;
         int countOfWins = 0;
+        boolean winnerFound = false;
         boolean lastWinnerFound = false;
         final Set<Integer> winIndices = new HashSet<>();
         final Map<Integer, List<int[]>> markedPositions = new HashMap<>();
 
         for (int i = 0; i < chosenNumbers.size(); i++) {
-            if (lastWinnerFound) {
+            if ((!isFindLastWinner && winnerFound) || lastWinnerFound) {
                 break;
             }
             for (int j = 0; j < intMatrices.size(); j++) {
-                if (lastWinnerFound) {
+                if ((!isFindLastWinner && winnerFound) || lastWinnerFound) {
                     break;
                 }
                 final int[][] intMatrix = intMatrices.get(j);
                 for (int k = 0; k < 5; k++) {
-                    if (lastWinnerFound) {
+                    if ((!isFindLastWinner && winnerFound) || lastWinnerFound) {
                         break;
                     }
                     for (int p = 0; p < 5; p++) {
@@ -129,17 +131,16 @@ public final class Prob4BLastWinnerFinder extends AbstractSolvable implements Lo
                             markedPositions.putIfAbsent(j, new ArrayList<>());
                             markedPositions.get(j).add(new int[] {k, p});
                         }
-                        if (!winIndices.contains(j)) {
-                            if (markedPositions.containsKey(j)) {
-                                if (isRowOrColumnMarked(intMatrix, markedPositions.get(j))) {
-                                    winMatrixIndex = j;
-                                    winNumber = chosenNumbers.get(i);
-                                    ++countOfWins;
-                                    winIndices.add(winMatrixIndex);
-                                    if (countOfWins == intMatrices.size()) {
-                                        lastWinnerFound = true;
-                                        break;
-                                    }
+                        if (!isFindLastWinner || !winIndices.contains(j)) {
+                            if (markedPositions.containsKey(j) && isRowOrColumnMarked(intMatrix, markedPositions.get(j))) {
+                                winMatrixIndex = j;
+                                winNumber = chosenNumbers.get(i);
+                                winnerFound = true;
+                                ++countOfWins;
+                                winIndices.add(winMatrixIndex);
+                                if (countOfWins == intMatrices.size()) {
+                                    lastWinnerFound = true;
+                                    break;
                                 }
                             }
                         }

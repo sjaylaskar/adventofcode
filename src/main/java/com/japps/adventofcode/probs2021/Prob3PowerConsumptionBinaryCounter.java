@@ -1,5 +1,5 @@
 /*
- * Id: Prob3ALifeSupportCounter.java 01-Dec-2021 10:33:11 am SubhajoyLaskar
+ * Id: Prob3PowerConsumptionBinaryCounter.java 03-Dec-2021 10:31:40 am SubhajoyLaskar
  * Copyright (©) 2021 Subhajoy Laskar
  * https://www.linkedin.com/in/subhajoylaskar
  */
@@ -15,31 +15,31 @@ import com.japps.adventofcode.util.Loggable;
 
 
 /**
- * The prob 3 A life support counter.
+ * The prob 3 power consumption binary counter.
  *
  * @author Subhajoy Laskar
  * @version 1.0
  */
-public final class Prob3BLifeSupportCounterByBits extends AbstractSolvable implements Loggable {
+public final class Prob3PowerConsumptionBinaryCounter extends AbstractSolvable implements Loggable {
 
     /** The instance. */
-    private static final Prob3BLifeSupportCounterByBits INSTANCE = instance();
+    private static final Prob3PowerConsumptionBinaryCounter INSTANCE = instance();
 
     /**
-     * Instantiates a new prob 3 A life support counter.
+     * Instantiates a new prob 3 power consumption binary counter.
      */
-    private Prob3BLifeSupportCounterByBits() {
+    private Prob3PowerConsumptionBinaryCounter() {
 
     }
 
     /**
      * Instance.
      *
-     * @return the prob 3 A life support counter
+     * @return the prob 3 power consumption binary counter
      */
-    private static Prob3BLifeSupportCounterByBits instance() {
+    private static Prob3PowerConsumptionBinaryCounter instance() {
 
-        return new Prob3BLifeSupportCounterByBits();
+        return new Prob3PowerConsumptionBinaryCounter();
     }
 
     /**
@@ -50,21 +50,53 @@ public final class Prob3BLifeSupportCounterByBits extends AbstractSolvable imple
     public static void main(final String[] args) {
 
         try {
-            INSTANCE.info(INSTANCE.findBinaryLifeSupportRating());
+            final List<String> lines = INSTANCE.lines();
+            INSTANCE.info(INSTANCE.findBinaryPowerConsumption(lines));
+            INSTANCE.info(INSTANCE.findBinaryLifeSupportRating(lines));
         } catch (final IOException exception) {
             INSTANCE.error(exception.getLocalizedMessage());
         }
     }
 
     /**
+     * Finds the binary power consumption.
+     *
+     * @param lines the lines
+     * @return the binary power consumption
+     * @throws IOException Signals that an I/O exception has occurred.
+     */
+    private long findBinaryPowerConsumption(final List<String> lines) throws IOException {
+
+        final StringBuilder gammaStringBuilder = new StringBuilder();
+
+        final int perLineLength = lines.get(0).length();
+        for (int i = 0; i < perLineLength; i++) {
+            int zeroCount = 0;
+            int oneCount = 0;
+
+            for (final String line : lines) {
+                if (line.charAt(i) == '0') {
+                    zeroCount++;
+                } else {
+                    oneCount++;
+                }
+            }
+            gammaStringBuilder.append((zeroCount > oneCount) ? 0 : 1);
+        }
+        final long gamma = decimalize(gammaStringBuilder.toString());
+        final long epsilon = ((long) (Math.pow(2, perLineLength) - 1) - gamma);
+
+        return gamma * epsilon;
+    }
+
+    /**
      * Finds the binary life support rating.
      *
+     * @param lines the lines
      * @return the binary life support rating
      * @throws IOException Signals that an I/O exception has occurred.
      */
-    private long findBinaryLifeSupportRating() throws IOException {
-
-        final List<String> lines = lines();
+    private long findBinaryLifeSupportRating(final List<String> lines) throws IOException {
 
         List<String> oxygenGenCountLines = new ArrayList<>(lines);
         List<String> co2ScrubberCountLines = new ArrayList<>(lines);
@@ -78,7 +110,7 @@ public final class Prob3BLifeSupportCounterByBits extends AbstractSolvable imple
         }
 
         return decimalize(oxygenGenCountLines.get(0))
-               * decimalize(co2ScrubberCountLines.get(0));
+            * decimalize(co2ScrubberCountLines.get(0));
     }
 
     /**
@@ -104,9 +136,9 @@ public final class Prob3BLifeSupportCounterByBits extends AbstractSolvable imple
             final char leastBit = (zeroCount > oneCount) ? '1' : '0';
             final int index = lineIndex;
             return co2ScrubberCountLines
-                    .stream()
-                    .filter(line -> line.charAt(index) == leastBit)
-                    .collect(Collectors.toList());
+                .stream()
+                .filter(line -> line.charAt(index) == leastBit)
+                .collect(Collectors.toList());
         }
 
         return co2ScrubberCountLines;
