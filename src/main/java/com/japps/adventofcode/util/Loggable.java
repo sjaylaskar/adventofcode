@@ -38,6 +38,15 @@ public interface Loggable {
     }
 
     /**
+     * Prints the object with a new line at the end.
+     *
+     * @param object the object
+     */
+    default void println(final Object object) {
+        LogUtil.newInstance(getClass()).println(object);
+    }
+
+    /**
      * Info.
      *
      * @param <T> the generic type

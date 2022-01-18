@@ -58,4 +58,13 @@ public final class LogUtil {
     public void error(final String message) {
         log.error(message);
     }
+
+    /**
+     * Prints the object with a new line at the end.
+     *
+     * @param object the object
+     */
+    public void println(final Object object) {
+        System.out.println(object);
+    }
 }
