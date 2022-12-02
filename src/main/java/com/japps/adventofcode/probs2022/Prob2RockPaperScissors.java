@@ -96,12 +96,12 @@ public final class Prob2RockPaperScissors extends AbstractSolvable implements Lo
     		final String scoreKey = scoreChars[0] + scoreChars[1];
     		final int score = pointsMap.get(scoreKey);
     		final int extdScore = pointsMapExtd.get(scoreKey);
-    		System.out.println(line + " scoreKey: "  + scoreKey + " score: " + score + " extdScore: " + extdScore);
+    		info(line + " scoreKey: "  + scoreKey + " score: " + score + " extdScore: " + extdScore);
 			totalScore += score;
 			extdTotalScore += extdScore;
     	}
-    	System.out.println(totalScore);
-    	System.out.println(extdTotalScore);
+    	info(totalScore);
+    	info(extdTotalScore);
     }
 
 }
