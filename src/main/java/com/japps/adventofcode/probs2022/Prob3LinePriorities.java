@@ -95,10 +95,10 @@ public final class Prob3LinePriorities extends AbstractSolvable implements Logga
 	private int computeGroupPrioritySum(final List<String> lines) {
 		int groupPrioritySum = 0;
     	for (int lineIndex = 0; lineIndex < lines.size() - 2; lineIndex++) {
-    		final Set<Character> line1Chars = toCharSet(lines.get(lineIndex));
-    		final Set<Character> line2Chars = toCharSet(lines.get(++lineIndex));
-    		final Set<Character> line3Chars = toCharSet(lines.get(++lineIndex));
-    		final Set<Character> commonChars = line1Chars.stream().filter(c -> line2Chars.contains(c) && line3Chars.contains(c)).collect(Collectors.toSet());
+    		final Set<Integer> line1Chars = toCharSet(lines.get(lineIndex));
+    		final Set<Integer> line2Chars = toCharSet(lines.get(++lineIndex));
+    		final Set<Integer> line3Chars = toCharSet(lines.get(++lineIndex));
+    		final Set<Integer> commonChars = line1Chars.stream().filter(c -> line2Chars.contains(c) && line3Chars.contains(c)).collect(Collectors.toSet());
     		groupPrioritySum += toPrioritySum(commonChars);
     	}
     	return groupPrioritySum;
@@ -116,9 +116,9 @@ public final class Prob3LinePriorities extends AbstractSolvable implements Logga
 			final int lineLength = line.length();
 			final String linePart1 = line.substring(0, lineLength / 2);
 			final String linePart2 = line.substring(lineLength / 2, lineLength);
-			final Set<Character> linePart1Chars = toCharSet(linePart1);
-			final Set<Character> linePart2Chars = toCharSet(linePart2);
-			final Set<Character> commonChars = linePart1Chars.stream().filter(c -> linePart2Chars.contains(c)).collect(Collectors.toSet());
+			final Set<Integer> linePart1Chars = toCharSet(linePart1);
+			final Set<Integer> linePart2Chars = toCharSet(linePart2);
+			final Set<Integer> commonChars = linePart1Chars.stream().filter(c -> linePart2Chars.contains(c)).collect(Collectors.toSet());
 			prioritySum += toPrioritySum(commonChars);
     	}
 		return prioritySum;
@@ -130,8 +130,8 @@ public final class Prob3LinePriorities extends AbstractSolvable implements Logga
 	 * @param commonChars the common chars
 	 * @return the int
 	 */
-	private int toPrioritySum(final Set<Character> commonChars) {
-		return commonChars.stream().map(c -> PRIORITY_MAP.get(c)).mapToInt(Integer::intValue).sum();
+	private int toPrioritySum(final Set<Integer> commonChars) {
+		return commonChars.stream().map(c -> PRIORITY_MAP.get((char)c.intValue())).mapToInt(Integer::intValue).sum();
 	}
 
 	/**
@@ -140,8 +140,8 @@ public final class Prob3LinePriorities extends AbstractSolvable implements Logga
 	 * @param line the line
 	 * @return the sets the
 	 */
-	private Set<Character> toCharSet(final String line) {
-		return line.chars().boxed().map(c -> (char)(int)c).collect(Collectors.toSet());
+	private Set<Integer> toCharSet(final String line) {
+		return line.chars().boxed().collect(Collectors.toSet());
 	}
 
 }
