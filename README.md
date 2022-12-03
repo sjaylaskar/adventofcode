@@ -4,4 +4,4 @@ Advent Of Code (AOC) contest
 
 https://adventofcode.com/
 
-Language: Java (openjdk16)
+Language: Java (openjdk19)
