@@ -8,11 +8,12 @@ package com.japps.adventofcode.probs2022;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Stack;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
@@ -68,20 +69,74 @@ public final class Prob5CrateStackMovement extends AbstractSolvable implements L
 	private void compute() throws IOException {
 		final List<String> lines = lines();
 
-		computeForSinglePop(lines);
-		computeForMultiPop(lines);
+		final List<Stack<Character>> stacks = buildStacks(lines);
+		final List<Stack<Character>> copyStacks = copyOf(stacks);
+		final List<String> moveLines = buildMoveConfigurationLines(lines);
+		computeForSinglePop(stacks, moveLines);
+		computeForMultiPop(copyStacks, moveLines);
 	}
+
+	/**
+	 * Builds the stacks.
+	 *
+	 * @param lines the lines
+	 * @return the list
+	 */
+	private List<Stack<Character>> buildStacks(final List<String> lines) {
+		final Stack<String> stackOfStackLines = new Stack<>();
+		lines.stream().filter(line -> StringUtils.startsWith(line, "[")).forEach(stackLine -> stackOfStackLines.add(stackLine));
+		final String []stackIndices = lines.get(stackOfStackLines.size()).trim().split("   ");
+		final List<Stack<Character>> stacks = new ArrayList<>();
+		IntStream.range(0, Integer.valueOf(stackIndices[stackIndices.length - 1])).forEach(index -> stacks.add(new Stack<>()));
+		while (!stackOfStackLines.isEmpty()) {
+			final String stackLine = stackOfStackLines.pop();
+			IntStream.range(0, stackIndices.length).forEach(stackIndex -> {
+				final char stackLineElement = stackLine.charAt(4 * stackIndex + 1);
+				if (StringUtils.isNotBlank(String.valueOf(stackLineElement).trim())) {
+					stacks.get(stackIndex).add(stackLineElement);
+				}
+			});
+		}
+		info("Stacks: " + stacks);
+		return stacks;
+	}
+
+	/**
+	 * Copy of.
+	 *
+	 * @param stacks the stacks
+	 * @return the list
+	 */
+	private List<Stack<Character>> copyOf(final List<Stack<Character>> stacks) {
+		final List<Stack<Character>> copyStacks = new ArrayList<>();
+		stacks.forEach(stack -> {
+			final Stack<Character> copyStack = new Stack<>();
+			copyStack.addAll(stack);
+			copyStacks.add(copyStack);
+		});
+		return copyStacks;
+	}
+
+	/**
+	 * Builds the move configuration lines.
+	 *
+	 * @param lines the lines
+	 * @return the list
+	 */
+	private List<String> buildMoveConfigurationLines(final List<String> lines) {
+		return lines.stream().filter(line -> StringUtils.startsWith(line, "move")).toList();
+	}
+
 
 	/**
 	 * Compute for single pop.
 	 *
-	 * @param lines the lines
+	 * @param stacks the stacks
+	 * @param moveLines the move lines
 	 */
-	private void computeForSinglePop(final List<String> lines) {
-		final List<Stack<Character>> stacks = buildStacks();
-
-		IntStream.range(10, 512).forEach(lineNumber -> {
-			final RearrangementProcedure rearrangementProcedure = RearrangementProcedure.of(lines.get(lineNumber));
+	private void computeForSinglePop(final List<Stack<Character>> stacks, final List<String> moveLines) {
+		moveLines.forEach(moveLine -> {
+			final RearrangementProcedure rearrangementProcedure = RearrangementProcedure.of(moveLine);
 			IntStream.range(0, rearrangementProcedure.cratesToMove).forEach(x -> stacks.get(rearrangementProcedure.dest).add(stacks.get(rearrangementProcedure.src).pop()));
 		});
 		info("Single pop tops: " + stackTops(stacks));
@@ -90,13 +145,12 @@ public final class Prob5CrateStackMovement extends AbstractSolvable implements L
 	/**
 	 * Compute for multi pop.
 	 *
-	 * @param lines the lines
+	 * @param stacks the stacks
+	 * @param moveLines the move lines
 	 */
-	private void computeForMultiPop(final List<String> lines) {
-		final List<Stack<Character>> stacks = buildStacks();
-
-		IntStream.range(10, 512).forEach(lineNumber -> {
-			final RearrangementProcedure rearrangementProcedure = RearrangementProcedure.of(lines.get(lineNumber));
+	private void computeForMultiPop(final List<Stack<Character>> stacks, final List<String> moveLines) {
+		moveLines.forEach(moveLine -> {
+			final RearrangementProcedure rearrangementProcedure = RearrangementProcedure.of(moveLine);
 			final Stack<Character> crateStackToMove = new Stack<>();
 			IntStream.range(0, rearrangementProcedure.cratesToMove).forEach(x -> crateStackToMove.add(stacks.get(rearrangementProcedure.src).pop()));
 			while (!crateStackToMove.isEmpty()) {
@@ -166,33 +220,5 @@ public final class Prob5CrateStackMovement extends AbstractSolvable implements L
 	 */
 	private String stackTops(final List<Stack<Character>> stacks) {
 		return stacks.stream().map(Stack::pop).map(String::valueOf).collect(Collectors.joining(""));
-	}
-
-	/**
-	 * Builds the stacks.
-	 *
-	 * @return the list
-	 */
-	private List<Stack<Character>> buildStacks() {
-		final Stack<Character> stack1 = new Stack<>();
-		stack1.addAll(Arrays.asList('B', 'P', 'N', 'Q', 'H', 'D', 'R', 'T'));
-		final Stack<Character> stack2 = new Stack<>();
-		stack2.addAll(Arrays.asList('W', 'G', 'B', 'J', 'T', 'V'));
-		final Stack<Character> stack3 = new Stack<>();
-		stack3.addAll(Arrays.asList('N', 'R', 'H', 'D', 'S', 'V', 'M', 'Q'));
-		final Stack<Character> stack4 = new Stack<>();
-		stack4.addAll(Arrays.asList('P', 'Z', 'N', 'M', 'C'));
-		final Stack<Character> stack5 = new Stack<>();
-		stack5.addAll(Arrays.asList('D', 'Z', 'B'));
-		final Stack<Character> stack6 = new Stack<>();
-		stack6.addAll(Arrays.asList('V', 'C', 'W', 'Z'));
-		final Stack<Character> stack7 = new Stack<>();
-		stack7.addAll(Arrays.asList('G', 'Z', 'N', 'C', 'V', 'Q', 'L', 'S'));
-		final Stack<Character> stack8 = new Stack<>();
-		stack8.addAll(Arrays.asList('L', 'G', 'J', 'M', 'D', 'N', 'V'));
-		final Stack<Character> stack9 = new Stack<>();
-		stack9.addAll(Arrays.asList('T', 'P', 'M', 'F', 'Z', 'C', 'J'));
-
-		return new ArrayList<>(Arrays.asList(stack1, stack2, stack3, stack4, stack5, stack6, stack7, stack8, stack9));
 	}
 }
