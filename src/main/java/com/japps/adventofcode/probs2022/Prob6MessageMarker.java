@@ -75,12 +75,10 @@ public final class Prob6MessageMarker extends AbstractSolvable implements Loggab
 		int start = 0;
 		int end = markerLength;
 		while (true) {
-			final String packetMarker = line.substring(start, end);
-			if (packetMarker.chars().distinct().count() == markerLength) {
+			if (line.substring(start, end).chars().distinct().count() == markerLength) {
 				break;
 			}
-			start++;
-			end = start + markerLength;
+			end = ++start + markerLength;
 		}
 		return end;
 	}
