@@ -1,9 +1,8 @@
 /*
- * Id: Prob6Test.java 06-Dec-2022 10:28:44 am SubhajoyLaskar
+ * Id: Prob6MessageMarker.java 06-Dec-2022 10:28:44 am SubhajoyLaskar
  * Copyright (©) 2022 Subhajoy Laskar
  * https://www.linkedin.com/in/subhajoylaskar
  */
-
 package com.japps.adventofcode.probs2022;
 
 import java.io.IOException;
@@ -18,15 +17,15 @@ import com.japps.adventofcode.util.Loggable;
  * @author Subhajoy Laskar
  * @version 1.0
  */
-public final class Prob6Test extends AbstractSolvable implements Loggable {
+public final class Prob6MessageMarker extends AbstractSolvable implements Loggable {
 
 	/** The instance. */
-	private static final Prob6Test INSTANCE = instance();
+	private static final Prob6MessageMarker INSTANCE = instance();
 
 	/**
 	 * Instantiates a new prob 6.
 	 */
-	private Prob6Test() {
+	private Prob6MessageMarker() {
 
 	}
 
@@ -35,9 +34,9 @@ public final class Prob6Test extends AbstractSolvable implements Loggable {
 	 *
 	 * @return the prob 6.
 	 */
-	private static Prob6Test instance() {
+	private static Prob6MessageMarker instance() {
 
-		return new Prob6Test();
+		return new Prob6MessageMarker();
 	}
 
 	/**
