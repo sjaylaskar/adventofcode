@@ -1,8 +1,9 @@
 /*
- * Id: Prob5CrateStackMovement.java 05-Dec-2022 11:19:11 am SubhajoyLaskar
+ * Id: Prob5CrateStackMovement.java 05-Dec-2022 SubhajoyLaskar
  * Copyright (©) 2022 Subhajoy Laskar
  * https://www.linkedin.com/in/subhajoylaskar
  */
+
 
 package com.japps.adventofcode.probs2022;
 

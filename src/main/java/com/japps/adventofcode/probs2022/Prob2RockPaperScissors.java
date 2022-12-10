@@ -1,8 +1,9 @@
 /*
- * Id: Prob2RockPaperScissors.java 03-Dec-2022 11:31:56 am SubhajoyLaskar
+ * Id: Prob2RockPaperScissors.java 02-Dec-2022 SubhajoyLaskar
  * Copyright (©) 2022 Subhajoy Laskar
  * https://www.linkedin.com/in/subhajoylaskar
  */
+
 package com.japps.adventofcode.probs2022;
 
 import java.io.IOException;
