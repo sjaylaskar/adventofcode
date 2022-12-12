@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author Subhajoy Laskar
  * @version 1.0
  */
-public class Pair {
+public class IntPair {
 
     /** The x. */
     private final int x;
@@ -22,13 +22,17 @@ public class Pair {
     /** The y. */
     private final int y;
 
+    public static IntPair of(final int x, final int y) {
+    	return new IntPair(x, y);
+    }
+
     /**
      * Instantiates a new pair.
      *
      * @param x the x
      * @param y the y
      */
-    public Pair(final int x, final int y) {
+    public IntPair(final int x, final int y) {
 
         this.x = x;
         this.y = y;
@@ -49,10 +53,16 @@ public class Pair {
     @Override
     public boolean equals(final Object obj) {
 
-        if (this == obj) return true;
-        if (obj == null) return false;
-        if (getClass() != obj.getClass()) return false;
-        final Pair other = (Pair) obj;
+        if (this == obj) {
+			return true;
+		}
+        if (obj == null) {
+			return false;
+		}
+        if (getClass() != obj.getClass()) {
+			return false;
+		}
+        final IntPair other = (IntPair) obj;
         return x == other.x && y == other.y;
     }
 

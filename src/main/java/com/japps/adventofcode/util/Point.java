@@ -12,7 +12,7 @@ package com.japps.adventofcode.util;
  * @author Subhajoy Laskar
  * @version 1.0
  */
-public class Point extends Pair {
+public class Point extends IntPair {
 
     /**
      * Instantiates a new point.
