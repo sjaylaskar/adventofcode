@@ -16,7 +16,7 @@ import java.util.Set;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
-import com.japps.adventofcode.util.Pair;
+import com.japps.adventofcode.util.IntPair;
 
 
 /**
@@ -98,7 +98,7 @@ public final class Prob9SmokeBasinSummarizer extends AbstractSolvable implements
 
         final List<Integer> basinSizes = new ArrayList<>();
 
-        final Set<Pair> indexSet = new HashSet<>();
+        final Set<IntPair> indexSet = new HashSet<>();
 
         final int[] rowDiffs = new int[] {-1, 0, 1, 0};
         final int[] colDiffs = new int[] {0, 1, 0, -1};
@@ -107,14 +107,14 @@ public final class Prob9SmokeBasinSummarizer extends AbstractSolvable implements
             row = rowIndex;
             for (int colIndex = 0, col; colIndex < numberOfColumns; colIndex++) {
                 col = colIndex;
-                final Pair index = new Pair(row, col);
+                final IntPair index = new IntPair(row, col);
                 if (!indexSet.contains(index)
                     && points[row][col] != 9) {
                     int size = 0;
-                    final Deque<Pair> indexQueue = new ArrayDeque<>();
+                    final Deque<IntPair> indexQueue = new ArrayDeque<>();
                     indexQueue.add(index);
                     while (!indexQueue.isEmpty()) {
-                        final Pair indexedPair = indexQueue.pop();
+                        final IntPair indexedPair = indexQueue.pop();
                         row = indexedPair.getX();
                         col = indexedPair.getY();
                         if (indexSet.contains(indexedPair)) {
@@ -129,7 +129,7 @@ public final class Prob9SmokeBasinSummarizer extends AbstractSolvable implements
                                 && checkRow < numberOfRows
                                 && 0 <= checkCol && checkCol < numberOfColumns
                                 && points[checkRow][checkCol] != 9) {
-                                indexQueue.add(new Pair(checkRow, checkCol));
+                                indexQueue.add(new IntPair(checkRow, checkCol));
                             }
                         }
                     }

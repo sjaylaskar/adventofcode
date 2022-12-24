@@ -13,7 +13,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.IntPair;
@@ -72,20 +72,23 @@ public final class Prob11MonkeyLevel extends AbstractSolvable implements Loggabl
 		final List<LinkedList<Long>> monkeyLists = new ArrayList<>();
 		final int numberOfMonkeys = (int) lines.stream().filter(line -> line.startsWith("Monkey")).count();
 		IntStream.range(0, numberOfMonkeys).forEach(index -> monkeyLists.add(new LinkedList<>()));
-		final List<Long> divisibilityTests = new ArrayList<>();
+		final List<Operation> operations = new ArrayList<>();
+		final List<Integer> divisibilityTests = new ArrayList<>();
 		final List<IntPair> testTrueFalseThrowPairs = new ArrayList<>();
 		final long[] inspectionCounts = new long[numberOfMonkeys];
 		for (int i = 1, index = 1; i <= numberOfMonkeys; i++, index += 7) {
-			monkeyLists.get(i - 1).addAll(
-					Arrays.asList(lines.get(index).substring(18).split(", ")).stream().map(Long::valueOf).toList());
-			divisibilityTests.add(Long.valueOf(lines.get(index + 2).substring(21)));
+			monkeyLists.get(i - 1).addAll(Arrays.asList(lines.get(index).substring(18).split(", ")).stream()
+					.map(Integer::valueOf).map(Long::valueOf).toList());
+			final String []operationStr =  lines.get(index + 1).substring(19).split(" ");
+			operations.add(Operation.of(operationStr[1].charAt(0), operationStr[0], operationStr[2]));
+			divisibilityTests.add(Integer.valueOf(lines.get(index + 2).substring(21)));
 			testTrueFalseThrowPairs.add(IntPair.of(Integer.valueOf(lines.get(index + 3).substring(29)),
 					Integer.valueOf(lines.get(index + 4).substring(30))));
 		}
 
-		computeLevel(monkeyLists, numberOfMonkeys, divisibilityTests, testTrueFalseThrowPairs, inspectionCounts, 20);
+		computeLevel(monkeyLists, numberOfMonkeys, operations, divisibilityTests, testTrueFalseThrowPairs, inspectionCounts, 20);
 
-		computeLevel(monkeyLists, numberOfMonkeys, divisibilityTests, testTrueFalseThrowPairs, inspectionCounts, 10000);
+		computeLevel(monkeyLists, numberOfMonkeys, operations, divisibilityTests, testTrueFalseThrowPairs, inspectionCounts, 10000);
 	}
 
 	/**
@@ -93,44 +96,29 @@ public final class Prob11MonkeyLevel extends AbstractSolvable implements Loggabl
 	 *
 	 * @param monkeyLists             the monkey lists
 	 * @param numberOfMonkeys         the number of monkeys
+	 * @param operations the operations
 	 * @param divisibilityTests       the divisibility tests
 	 * @param testTrueFalseThrowPairs the test true false throw pairs
 	 * @param inspectionCounts        the inspection counts
 	 * @param maxRounds               the max rounds
 	 */
-	private void computeLevel(final List<LinkedList<Long>> monkeyLists, final int numberOfMonkeys,
-			final List<Long> divisibilityTests, final List<IntPair> testTrueFalseThrowPairs,
+	private void computeLevel(final List<LinkedList<Long>> monkeyLists, final int numberOfMonkeys, final List<Operation> operations,
+			final List<Integer> divisibilityTests, final List<IntPair> testTrueFalseThrowPairs,
 			final long[] inspectionCounts, final int maxRounds) {
 		for (int round = 1; round <= maxRounds; round++) {
 			for (int index = 0; index < numberOfMonkeys; index++) {
 				while (!monkeyLists.get(index).isEmpty()) {
 					final long item = monkeyLists.get(index).poll();
-					final long opItem = operation(index, item) / (maxRounds == 20 ? 3L : 1L);
+					final long opItem = operations.get(index).perform(item) / (maxRounds == 20 ? 3 : 1);
 					monkeyLists.get(divisibilityTest(index, opItem, divisibilityTests)
 							? testTrueFalseThrowPairs.get(index).getX()
 							: testTrueFalseThrowPairs.get(index).getY()).addLast(opItem);
-					inspectionCounts[index]++;
+					inspectionCounts[index] += 1;
 				}
 			}
-			// printInspectionRounds(inspectionCounts, round);
 		}
 		Arrays.sort(inspectionCounts);
-		final long level = inspectionCounts[numberOfMonkeys - 1] * inspectionCounts[numberOfMonkeys - 2];
-		info("Level: " + level);
-	}
-
-	/**
-	 * Prints the inspection rounds.
-	 *
-	 * @param inspectionCounts the inspection counts
-	 * @param round            the round
-	 */
-	private void printInspectionRounds(final long[] inspectionCounts, final int round) {
-		if (round == 1 || round == 20 || round == 1000 || round == 2000 || round == 3000 || round == 4000
-				|| round == 5000 || round == 6000 || round == 7000 || round == 8000 || round == 9000
-				|| round == 10000) {
-			info("Inspections: Round: " + round + " -> " + ArrayUtils.toString(inspectionCounts));
-		}
+		info("Level: " + inspectionCounts[numberOfMonkeys - 1] * inspectionCounts[numberOfMonkeys - 2]);
 	}
 
 	/**
@@ -141,35 +129,83 @@ public final class Prob11MonkeyLevel extends AbstractSolvable implements Loggabl
 	 * @param divisibilityTests the divisibility tests
 	 * @return true, if successful
 	 */
-	private boolean divisibilityTest(final int index, final long opItem, final List<Long> divisibilityTests) {
-		return opItem % divisibilityTests.get(index) == 0L;
+	private boolean divisibilityTest(final int index, final long opItem, final List<Integer> divisibilityTests) {
+		return 0 == opItem % divisibilityTests.get(index);
 	}
 
 	/**
-	 * Operation.
+	 * The operation.
 	 *
-	 * @param index the index
-	 * @param item  the item
-	 * @return the long
+	 * @author Subhajoy Laskar
+	 * @version 1.0
 	 */
-	private long operation(final int index, final long item) {
+	private static final class Operation {
 
-		return switch (index) {
-		case 0 -> item * 3;
-		case 1 -> item + 2;
-		case 2 -> item + 1;
-		case 3 -> item + 5;
-		case 4 -> item + 4;
-		case 5 -> item + 8;
-		case 6 -> item * 7;
-		case 7 -> item * item;
-		default -> throw new IllegalStateException("Unsupported operation.");
-		};
+		/** The operator. */
+		private final char operator;
 
-		/*
-		 * return switch (index) { case 0 -> item * 19; case 1 -> item + 6; case 2 ->
-		 * item * item; case 3 -> item + 3; default -> throw new
-		 * IllegalStateException("Unsupported operation."); };
+		/** The operand 1. */
+		private final String operand1;
+
+		/** The operand 2. */
+		private final String operand2;
+
+		/**
+		 * Instantiates a new operation.
+		 *
+		 * @param operator the operator
+		 * @param operand1 the operand 1
+		 * @param operand2 the operand 2
 		 */
+		private Operation(final char operator, final String operand1, final String operand2) {
+			this.operator = operator;
+			this.operand1 = operand1;
+			this.operand2 = operand2;
+		}
+
+		/**
+		 * Of.
+		 *
+		 * @param operator the operator
+		 * @param operand1 the operand 1
+		 * @param operand2 the operand 2
+		 * @return the operation
+		 */
+		private static Operation of(final char operator, final String operand1, final String operand2) {
+			return new Operation(operator, operand1, operand2);
+		}
+
+		/**
+		 * Perform.
+		 *
+		 * @param item the item
+		 * @return the long
+		 */
+		private long perform(final long item) {
+			if (StringUtils.equals(operand1, operand2)) {
+				return operation(operator, item, item);
+			} else {
+				return operation(operator, Long.valueOf(item), Long.valueOf(operand2));
+			}
+		}
+
+		/**
+		 * Operation.
+		 *
+		 * @param operator the operator
+		 * @param operand1 the operand 1
+		 * @param operand2 the operand 2
+		 * @return the Long
+		 */
+		private Long operation(final char operator, final long operand1, final long operand2) {
+
+			return switch (operator) {
+			case '+' -> operand1 + operand2;
+			case '-' -> operand1 - operand2;
+			case '*' -> operand1 * operand2;
+			case '/' -> operand1 / operand2;
+			default -> throw new IllegalStateException("Unsupported operation.");
+			};
+		}
 	}
 }
