@@ -95,12 +95,16 @@ public final class Prob21MonkeyMath extends AbstractSolvable implements Loggable
 		BigInteger left = BigInteger.ZERO;
 		BigInteger right = new BigInteger("100000000000000000000");
 		while (left.compareTo(right) < 0) {
-			final BigInteger mid = left.add(right).divide(new BigInteger("2"));
+			final BigInteger rangeTotal = left.add(right);
+			final BigInteger rangeMid = rangeTotal.divide(new BigInteger("2"));
+			final BigInteger mid = rangeTotal.mod(BigInteger.valueOf(2)).equals(BigInteger.ZERO)
+				   ? rangeMid
+				   : rangeMid.subtract(BigInteger.ONE);
 			final BigInteger equalityTestValue = rootOperand2Value.subtract(operate(rootOperand1, mid));
 			if (equalityTestValue.compareTo(BigInteger.ZERO) < 0) {
 				left = mid;
 			} else if (equalityTestValue.equals(BigInteger.ZERO)) {
-				return mid.subtract(BigInteger.ONE);
+				return mid;
 			} else {
 				right = mid;
 			}
