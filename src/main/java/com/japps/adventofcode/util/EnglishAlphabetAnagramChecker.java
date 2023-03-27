@@ -108,6 +108,15 @@ public final class EnglishAlphabetAnagramChecker implements Loggable {
 	 */
 	private static boolean areAnagrams(final AnagramData anagramData) {
 
+		if (anagramData.s1 == null && anagramData.s2 == null) {
+			return true;
+		}
+
+		if (anagramData.s1 == null && anagramData.s2 != null
+		    || anagramData.s1 != null && anagramData.s2 == null) {
+			return false;
+		}
+
 		if (anagramData.s1.length() != anagramData.s2.length()) {
 			return false;
 		}
