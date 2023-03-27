@@ -121,6 +121,10 @@ public final class EnglishAlphabetAnagramChecker implements Loggable {
 			return false;
 		}
 
+		if (anagramData.s1.equalsIgnoreCase(anagramData.s2)) {
+			return true;
+		}
+
 		final int[] chars = new int[ENGLISH_ALPHABET_SIZE];
 
 		IntStream
