@@ -1,9 +1,8 @@
 /*
- * Id: Prob1ElfCals.java 01-Dec-2022 SubhajoyLaskar
- * Copyright (©) 2022 Subhajoy Laskar
+ * Id: Prob1AOC2023.java 02-Dec-2023 SubhajoyLaskar
+ * Copyright (©) 2023 Subhajoy Laskar
  * https://www.linkedin.com/in/subhajoylaskar
  */
-
 package com.japps.adventofcode.probs2023;
 
 import java.io.IOException;
