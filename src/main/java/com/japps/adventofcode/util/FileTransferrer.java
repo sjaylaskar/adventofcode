@@ -26,9 +26,12 @@ public final class FileTransferrer implements Loggable {
 
     private static final String SOURCE_PATH_2021 = "data/2021";
     private static final String DESTINATION_PATH_2021 = "src/main/resources/com/japps/adventofcode/probs2021";
-    
+
     private static final String SOURCE_PATH_2022 = "data/2022";
     private static final String DESTINATION_PATH_2022 = "src/main/resources/com/japps/adventofcode/probs2022";
+
+    private static final String SOURCE_PATH_2023 = "data/2023";
+    private static final String DESTINATION_PATH_2023 = "src/main/resources/com/japps/adventofcode/probs2023";
 
     private static final Map<String, String> SRC_DEST_MAP = new HashMap<>();
 
@@ -36,6 +39,7 @@ public final class FileTransferrer implements Loggable {
         SRC_DEST_MAP.put(SOURCE_PATH_2020, DESTINATION_PATH_2020);
         SRC_DEST_MAP.put(SOURCE_PATH_2021, DESTINATION_PATH_2021);
         SRC_DEST_MAP.put(SOURCE_PATH_2022, DESTINATION_PATH_2022);
+        SRC_DEST_MAP.put(SOURCE_PATH_2023, DESTINATION_PATH_2023);
     }
 
     private static int count;
