@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.LongStream;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -71,10 +72,7 @@ public final class Prob4AOC2023 extends AbstractSolvable implements Loggable {
 		final Map<Long, Long> copyValuesMap = new HashMap<>();
 		long cardNumber = 0;
 		for (final String line : lines) {
-			final String cardNums = line.split(":")[1].trim();
-			final Set<Long> winNums = Arrays.asList(cardNums.substring(0, cardNums.indexOf("|")).trim().split(" ")).stream().map(String::trim).filter(NumberUtils::isCreatable).map(Long::valueOf).collect(Collectors.toSet());
-			final Set<Long> cardPoints = Arrays.asList(cardNums.substring(cardNums.indexOf("|") + 1).trim().split(" ")).stream().map(String::trim).filter(NumberUtils::isCreatable).map(Long::valueOf).collect(Collectors.toSet());
-			final long matchCount = cardPoints.stream().filter(points -> winNums.contains(points)).count();
+			final long matchCount = computMatchCount(line);
 			sum += matchCount > 0 ? Math.pow(2, matchCount - 1) : 0;
 			computeCopyScratchCards(copyValuesMap, cardNumber++, matchCount);
 		}
@@ -82,12 +80,20 @@ public final class Prob4AOC2023 extends AbstractSolvable implements Loggable {
 		println(copyValuesMap.values().stream().mapToLong(Long::valueOf).sum());
 	}
 
+	private long computMatchCount(final String line) {
+		final String cardNums = line.split(":")[1].trim();
+		final Set<Long> winNums = Arrays.asList(cardNums.substring(0, cardNums.indexOf("|")).trim().split(" ")).stream().map(String::trim).filter(NumberUtils::isCreatable).map(Long::valueOf).collect(Collectors.toSet());
+		final Set<Long> cardPoints = Arrays.asList(cardNums.substring(cardNums.indexOf("|") + 1).trim().split(" ")).stream().map(String::trim).filter(NumberUtils::isCreatable).map(Long::valueOf).collect(Collectors.toSet());
+		final long matchCount = cardPoints.stream().filter(points -> winNums.contains(points)).count();
+		return matchCount;
+	}
+
 	private void computeCopyScratchCards(final Map<Long, Long> copyValuesMap, final long cardNumber, final long matchCount) {
 		copyValuesMap.putIfAbsent(cardNumber, 0L);
 		copyValuesMap.put(cardNumber, copyValuesMap.get(cardNumber) + 1);
-		for (long copyIndex = 0; copyIndex < matchCount; copyIndex++) {
-			 copyValuesMap.putIfAbsent(cardNumber + 1 + copyIndex, 0L);
-			 copyValuesMap.put(cardNumber + 1 + copyIndex, copyValuesMap.get(cardNumber + copyIndex + 1) + copyValuesMap.get(cardNumber));
-		}
+		LongStream.range(0, matchCount).forEach(val -> {
+			final long copiedCardNumber = cardNumber + val + 1;
+			copyValuesMap.put(copiedCardNumber, copyValuesMap.getOrDefault(copiedCardNumber, 0L) + copyValuesMap.get(cardNumber));
+		});
 	}
 }
