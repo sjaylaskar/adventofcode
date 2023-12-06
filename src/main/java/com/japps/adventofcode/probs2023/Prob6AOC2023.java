@@ -12,6 +12,7 @@ import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
 
 /**
+ * The prob 6 AOC 2023.
  *
  * @author Subhajoy Laskar
  * @version 1.0
@@ -22,6 +23,7 @@ public final class Prob6AOC2023 extends AbstractSolvable implements Loggable {
 	private static final Prob6AOC2023 INSTANCE = instance();
 
 	/**
+	 * Instantiates a new prob 6 AOC 2023.
 	 */
 	private Prob6AOC2023() {
 
@@ -30,6 +32,7 @@ public final class Prob6AOC2023 extends AbstractSolvable implements Loggable {
 	/**
 	 * Instance.
 	 *
+	 * @return the prob 6 AOC 2023
 	 */
 	private static Prob6AOC2023 instance() {
 
@@ -56,21 +59,14 @@ public final class Prob6AOC2023 extends AbstractSolvable implements Loggable {
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private void compute() throws IOException {
-		final List<Integer> times = List.of(57, 72, 69, 92);
-		final List<Integer> distances = List.of(291, 1172, 1176, 2026);
+		final List<Long> times = List.of(57L, 72L, 69L, 92L);
+		final List<Long> distances = List.of(291L, 1172L, 1176L, 2026L);
 		println(times);
 	    println(distances);
 
-	    int beat = 1;
+	    long beat = 1;
 	    for (int i = 0; i < times.size(); i++) {
-	    	 int numberOfWays = 0;
-	    	 for (int time = 1; time < times.get(i); time++) {
-	    		  if (time * (times.get(i) - time) > distances.get(i)) {
-	    			  numberOfWays = times.get(i) - 2 * time + 1;
-	    			  break;
-	    		  }
-	    	 }
-	    	 beat *= numberOfWays;
+	    	 beat *= findNumberOfWaysToBeat(times.get(i), distances.get(i));
 	    }
 	    println(beat);
 
@@ -78,13 +74,22 @@ public final class Prob6AOC2023 extends AbstractSolvable implements Loggable {
 	    final long raceDistance = 291117211762026L;
 	    println(raceTime);
 	    println(raceDistance);
-	    long numberOfWays = 0;
-	    for (int time = 1; time < raceTime; time++) {
-	    	if (time * (raceTime - time) > raceDistance) {
-  			  numberOfWays = raceTime - 2 * time + 1;
-  			  break;
-  		  }
-	    }
-	    println(numberOfWays);
+	    println(findNumberOfWaysToBeat(raceTime, raceDistance));
+	}
+
+	/**
+	 * Find number of ways to beat.
+	 *
+	 * @param raceTime the race time
+	 * @param raceDistance the race distance
+	 * @return the number of ways to beat
+	 */
+	private long findNumberOfWaysToBeat(final long raceTime, final long raceDistance) {
+		for (long time = 1; time < raceTime; time++) {
+			  if (time * (raceTime - time) > raceDistance) {
+				  return raceTime - 2 * time + 1;
+			  }
+		 }
+		return 0;
 	}
 }
