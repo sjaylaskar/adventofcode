@@ -7,6 +7,8 @@ package com.japps.adventofcode.probs2023;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
@@ -61,20 +63,21 @@ public final class Prob6AOC2023 extends AbstractSolvable implements Loggable {
 	private void compute() throws IOException {
 		final List<Long> times = List.of(57L, 72L, 69L, 92L);
 		final List<Long> distances = List.of(291L, 1172L, 1176L, 2026L);
-		println(times);
-	    println(distances);
+		// println(times);
+	    // println(distances);
+		/*
+		 * long beat = 1; for (int i = 0; i < times.size(); i++) { beat *=
+		 * findNumberOfWaysToBeat(times.get(i), distances.get(i)); } println(beat);
+		 */
 
-	    long beat = 1;
-	    for (int i = 0; i < times.size(); i++) {
-	    	 beat *= findNumberOfWaysToBeat(times.get(i), distances.get(i));
-	    }
-	    println(beat);
+	    // final long raceTime = 57726992L;
+	    // final long raceDistance = 291117211762026L;
+	    // println(raceTime);
+	    // println(raceDistance);
 
-	    final long raceTime = 57726992L;
-	    final long raceDistance = 291117211762026L;
-	    println(raceTime);
-	    println(raceDistance);
-	    println(findNumberOfWaysToBeat(raceTime, raceDistance));
+		// Streamlined...
+		println(IntStream.range(0, times.size()).mapToLong(i -> findNumberOfWaysToBeat(times.get(i), distances.get(i))).reduce(1, (a, b) -> a * b));
+	    println(findNumberOfWaysToBeat(57726992L, 291117211762026L));
 	}
 
 	/**
@@ -85,11 +88,13 @@ public final class Prob6AOC2023 extends AbstractSolvable implements Loggable {
 	 * @return the number of ways to beat
 	 */
 	private long findNumberOfWaysToBeat(final long raceTime, final long raceDistance) {
-		for (long time = 1; time < raceTime; time++) {
-			  if (time * (raceTime - time) > raceDistance) {
-				  return raceTime - 2 * time + 1;
-			  }
-		 }
-		return 0;
+		/*
+		 * for (long time = 1; time < raceTime; time++) { if (time * (raceTime - time) >
+		 * raceDistance) { return raceTime - 2 * time + 1; } }
+		 */
+		//return 0;
+
+		// Streamlined...
+		return raceTime - 2 * LongStream.range(1, raceTime).filter(time -> time * (raceTime - time) > raceDistance).findFirst().getAsLong() + 1;
 	}
 }

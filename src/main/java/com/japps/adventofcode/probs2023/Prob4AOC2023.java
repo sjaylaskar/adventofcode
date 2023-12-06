@@ -68,31 +68,43 @@ public final class Prob4AOC2023 extends AbstractSolvable implements Loggable {
 	 */
 	private void compute() throws IOException {
 		final List<String> lines = lines();
-		long sum = 0;
+		long matchCountSum = 0;
 		final Map<Long, Long> copyValuesMap = new HashMap<>();
 		long cardNumber = 0;
 		for (final String line : lines) {
-			final long matchCount = computMatchCount(line);
-			sum += matchCount > 0 ? Math.pow(2, matchCount - 1) : 0;
+			final long matchCount = computeMatchCount(line);
+			matchCountSum += matchCount > 0 ? Math.pow(2, matchCount - 1) : 0;
 			computeCopyScratchCards(copyValuesMap, cardNumber++, matchCount);
 		}
-		println(sum);
+		println(matchCountSum);
 		println(copyValuesMap.values().stream().mapToLong(Long::valueOf).sum());
 	}
 
-	private long computMatchCount(final String line) {
+	/**
+	 * Compute match count.
+	 *
+	 * @param line the line
+	 * @return the long
+	 */
+	private long computeMatchCount(final String line) {
 		final String cardNums = line.split(":")[1].trim();
 		final Set<Long> winNums = Arrays.asList(cardNums.substring(0, cardNums.indexOf("|")).trim().split(" ")).stream().map(String::trim).filter(NumberUtils::isCreatable).map(Long::valueOf).collect(Collectors.toSet());
 		final Set<Long> cardPoints = Arrays.asList(cardNums.substring(cardNums.indexOf("|") + 1).trim().split(" ")).stream().map(String::trim).filter(NumberUtils::isCreatable).map(Long::valueOf).collect(Collectors.toSet());
-		final long matchCount = cardPoints.stream().filter(points -> winNums.contains(points)).count();
-		return matchCount;
+		return cardPoints.stream().filter(points -> winNums.contains(points)).count();
 	}
 
+	/**
+	 * Compute copy scratch cards.
+	 *
+	 * @param copyValuesMap the copy values map
+	 * @param cardNumber the card number
+	 * @param matchCount the match count
+	 */
 	private void computeCopyScratchCards(final Map<Long, Long> copyValuesMap, final long cardNumber, final long matchCount) {
 		copyValuesMap.putIfAbsent(cardNumber, 0L);
 		copyValuesMap.put(cardNumber, copyValuesMap.get(cardNumber) + 1);
-		LongStream.range(0, matchCount).forEach(val -> {
-			final long copiedCardNumber = cardNumber + val + 1;
+		LongStream.range(0, matchCount).forEach(matchedCopyVal -> {
+			final long copiedCardNumber = cardNumber + matchedCopyVal + 1;
 			copyValuesMap.put(copiedCardNumber, copyValuesMap.getOrDefault(copiedCardNumber, 0L) + copyValuesMap.get(cardNumber));
 		});
 	}
