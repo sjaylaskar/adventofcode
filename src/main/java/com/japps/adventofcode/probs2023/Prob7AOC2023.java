@@ -8,6 +8,7 @@ package com.japps.adventofcode.probs2023;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,7 @@ public final class Prob7AOC2023 extends AbstractSolvable implements Loggable {
 
 		processPartOne(lines);
 
-		//processPartTwo(lines);
+		processPartTwo(lines);
 
 	}
 
@@ -103,19 +104,20 @@ public final class Prob7AOC2023 extends AbstractSolvable implements Loggable {
 			 final Hand hand = new Hand(handBidPair[0], Long.valueOf(handBidPair[1]));
 			 final Map<Character, Long> handCharFrequencyMap
 			    = hand.value.chars().mapToObj(c -> (char)c).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-			 if (isFiveOfAKind(handCharFrequencyMap)) {
+			 final Map<Character, Long> convertedCharFrequencyMap = convertJCardForHighestStrength(handCharFrequencyMap);
+			 if (isFiveOfAKind(convertedCharFrequencyMap)) {
 				 fiveOfAKindHandTypeList.add(hand);
-			 } else if (isFourOfAKind(handCharFrequencyMap)) {
+			 } else if (isFourOfAKind(convertedCharFrequencyMap)) {
 				 fourOfAKindHandTypeList.add(hand);
-			 } else if (isFullHouse(handCharFrequencyMap)) {
+			 } else if (isFullHouse(convertedCharFrequencyMap)) {
 				 fullHouseHandTypeList.add(hand);
-			 } else if (isThreeOfAKind(handCharFrequencyMap)) {
+			 } else if (isThreeOfAKind(convertedCharFrequencyMap)) {
 				 threeOfAKindHandTypeList.add(hand);
-			 } else if (isTwoPair(handCharFrequencyMap)) {
+			 } else if (isTwoPair(convertedCharFrequencyMap)) {
 				 twoPairHandTypeList.add(hand);
-			 } else if (isOnePair(handCharFrequencyMap)) {
+			 } else if (isOnePair(convertedCharFrequencyMap)) {
 				 onePairHandTypeList.add(hand);
-			 } else if (isHighCard(handCharFrequencyMap)) {
+			 } else if (isHighCard(convertedCharFrequencyMap)) {
 				 highCardHandTypeList.add(hand);
 			 }
 		}
@@ -152,6 +154,34 @@ public final class Prob7AOC2023 extends AbstractSolvable implements Loggable {
 
 		println(handRanks.keySet().stream().mapToLong(hand -> hand.bid * handRanks.get(hand)).sum());
 
+	}
+
+	/**
+	 * @param handCharFrequencyMap
+	 * @return
+	 */
+	private Map<Character, Long> convertJCardForHighestStrength(final Map<Character, Long> handCharFrequencyMap) {
+
+		if (handCharFrequencyMap.containsKey(Character.valueOf('J'))) {
+			final long jCount = handCharFrequencyMap.get(Character.valueOf('J'));
+			handCharFrequencyMap.keySet()
+			.stream()
+			.filter(key -> !key.equals(Character.valueOf('J')))
+			.max(freqComparator(handCharFrequencyMap))
+			.ifPresent(key -> handCharFrequencyMap.put(key, handCharFrequencyMap.get(key) + jCount));
+			handCharFrequencyMap.remove(Character.valueOf('J'));
+		}
+
+		return handCharFrequencyMap;
+	}
+
+	private Comparator<? super Character> freqComparator(final Map<Character, Long> handCharFrequencyMap) {
+		return (a, b) -> {
+			final int result = Long.compare(handCharFrequencyMap.get(a), handCharFrequencyMap.get(b));
+			return result != 0
+					? result
+					: Integer.compare(CARD_RANKS_PART2.get(String.valueOf(a)), CARD_RANKS_PART2.get(String.valueOf(b)));
+		};
 	}
 
 	private void processPartOne(final List<String> lines) {
@@ -387,5 +417,14 @@ public final class Prob7AOC2023 extends AbstractSolvable implements Loggable {
 			}
 			return result;
 		}
+
+
+
+		@Override
+		public String toString() {
+			return "Hand [value=" + value + ", bid=" + bid + "]";
+		}
+
+
 	}
 }

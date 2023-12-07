@@ -118,6 +118,7 @@ public final class Prob5AOC2023 extends AbstractSolvable implements Loggable {
 	private void processRanges(final List<String> lines, final int lineRangeStart, final int lineRangeEnd,
 			final Collection<Range<Long>> referRanges, final Map<Range<Long>, Range<Long>> resultMap,
 			final Set<Range<Long>> extraRanges, final boolean isFirstRound) {
+		final Set<Range<Long>> secondPartExtraRanges = new HashSet<>();
 		for (final Range<Long> referRange : referRanges) {
 			for (int lineIndex = lineRangeStart; lineIndex < lineRangeEnd; lineIndex++) {
 				final String[] destinationSourceRangeStr = lines.get(lineIndex).split(" ");
@@ -132,16 +133,20 @@ public final class Prob5AOC2023 extends AbstractSolvable implements Loggable {
 					final long destinationRangeEndDiff = referRange.getMaximum() - sourceRangeStart;
 					resultMap.put(referRange, Range.between(Long.valueOf(destinationSourceRangeStr[0]) + destinationRangeStartDiff, Long.valueOf(destinationSourceRangeStr[0]) + destinationRangeEndDiff));
 				} else if (sourceRange.contains(referRange.getMaximum())) {
+					final Range<Long> firstRange = Range.between(referRange.getMinimum(), sourceRangeStart - 1);
 					if (isFirstRound) {
-						final Range<Long> firstRange = Range.between(referRange.getMinimum(), sourceRangeStart - 1);
 						extraRanges.add(firstRange);
+					} else {
+						secondPartExtraRanges.add(firstRange);
 					}
 					final long secondRangeDiff = referRange.getMaximum() - sourceRangeStart;
 					resultMap.put(Range.between(sourceRangeStart, referRange.getMaximum()), Range.between(Long.valueOf(destinationSourceRangeStr[0]), Long.valueOf(destinationSourceRangeStr[0]) + secondRangeDiff));
 				} else if (sourceRange.contains(referRange.getMinimum())) {
+					final Range<Long> firstRange = Range.between(sourceRangeEnd + 1, referRange.getMaximum());
 					if (isFirstRound) {
-						final Range<Long> firstRange = Range.between(sourceRangeEnd + 1, referRange.getMaximum());
 						extraRanges.add(firstRange);
+					} else {
+						secondPartExtraRanges.add(firstRange);
 					}
 					final long secondRangeStartDiff = referRange.getMinimum() - sourceRange.getMinimum();
 					final long secondRangeEndDiff = sourceRangeEnd - referRange.getMinimum();
@@ -153,6 +158,9 @@ public final class Prob5AOC2023 extends AbstractSolvable implements Loggable {
 			if (resultMap.keySet().stream().allMatch(resultRange -> !resultRange.isOverlappedBy(referRange))) {
 				resultMap.put(referRange, referRange);
 			}
+		}
+		if (!isFirstRound && CollectionUtils.isNotEmpty(secondPartExtraRanges)) {
+			secondPartExtraRanges.forEach(range -> resultMap.put(range, range));
 		}
 	}
 
