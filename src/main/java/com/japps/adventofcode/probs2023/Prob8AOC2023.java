@@ -6,6 +6,7 @@
 package com.japps.adventofcode.probs2023;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +21,7 @@ import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
 
 /**
+ * The prob 8 AOC 2023.
  *
  * @author Subhajoy Laskar
  * @version 1.0
@@ -30,6 +32,7 @@ public final class Prob8AOC2023 extends AbstractSolvable implements Loggable {
 	private static final Prob8AOC2023 INSTANCE = instance();
 
 	/**
+	 * Instantiates a new prob 8 AOC 2023.
 	 */
 	private Prob8AOC2023() {
 
@@ -38,6 +41,7 @@ public final class Prob8AOC2023 extends AbstractSolvable implements Loggable {
 	/**
 	 * Instance.
 	 *
+	 * @return the prob 8 AOC 2023
 	 */
 	private static Prob8AOC2023 instance() {
 
@@ -83,9 +87,17 @@ public final class Prob8AOC2023 extends AbstractSolvable implements Loggable {
 
 		computePartOne(pathMap, instructions);
 
-		computePartTwo(pathMap, instructions);
+		// computePartTwo(pathMap, instructions);
+
+		computePartTwoFaster(pathMap, instructions);
 	}
 
+	/**
+	 * Compute part one.
+	 *
+	 * @param pathMap the path map
+	 * @param instructions the instructions
+	 */
 	private void computePartOne(final Map<String, Pair<String, String>> pathMap, final String instructions) {
 		long stepCount = 0;
 		String key = "AAA";
@@ -102,6 +114,13 @@ public final class Prob8AOC2023 extends AbstractSolvable implements Loggable {
 		println(stepCount);
 	}
 
+	/**
+	 * Next key.
+	 *
+	 * @param pathValue the path value
+	 * @param instruction the instruction
+	 * @return the string
+	 */
 	private String nextKey(final Pair<String, String> pathValue, final char instruction) {
 		return switch (instruction) {
 		case 'L' -> pathValue.getLeft();
@@ -111,14 +130,17 @@ public final class Prob8AOC2023 extends AbstractSolvable implements Loggable {
 	}
 
 	/**
-	 * @param pathMap
-	 * @param instructions
+	 * Compute part two.
+	 *
+	 * @param pathMap the path map
+	 * @param instructions the instructions
 	 */
 	private void computePartTwo(final Map<String, Pair<String, String>> pathMap, final String instructions) {
 
 		Set<String> keys = pathMap.keySet().stream().filter(key -> key.endsWith("A")).collect(Collectors.toSet());
 		long stepCount = 0;
-		final List<Character> instructionChars = instructions.chars().mapToObj(charVal -> (char)charVal).collect(Collectors.toList());
+		final List<Character> instructionChars = instructions.chars().mapToObj(charVal -> (char) charVal)
+				.collect(Collectors.toList());
 		while (!endsWithZ(keys)) {
 			for (final Character instructionChar : instructionChars) {
 				stepCount++;
@@ -133,8 +155,57 @@ public final class Prob8AOC2023 extends AbstractSolvable implements Loggable {
 		println(stepCount);
 	}
 
+	/**
+	 * Ends with Z.
+	 *
+	 * @param keys the keys
+	 * @return true, if successful
+	 */
 	private boolean endsWithZ(final Set<String> keys) {
 		return CollectionUtils.isNotEmpty(keys) && keys.stream().allMatch(key -> key.endsWith("Z"));
+	}
+
+	/**
+	 * Compute part two faster.
+	 *
+	 * @param pathMap the path map
+	 * @param instructions the instructions
+	 */
+	private void computePartTwoFaster(final Map<String, Pair<String, String>> pathMap, final String instructions) {
+
+		long stepsCount = 1;
+		long cycleSize = 0;
+		long cycleStepsCounter = 0;
+		final List<String> keys = pathMap.keySet().stream().filter(key -> key.endsWith("A"))
+				.collect(Collectors.toList());
+		int instructionStepIndex = 0;
+		while (cycleSize < keys.size()) {
+			final char instruction = instructions.charAt(instructionStepIndex++ % instructions.length());
+			for (int stepIndex = 0; stepIndex < keys.size(); stepIndex++) {
+				keys.set(stepIndex, nextKey(pathMap.get(keys.get(stepIndex)), instruction));
+			}
+			for (int stepIndex = 0; stepIndex < keys.size(); stepIndex++) {
+				if ((cycleStepsCounter & 1 << stepIndex) == 0 && keys.get(stepIndex).endsWith("Z")) {
+					cycleStepsCounter |= 1 << stepIndex;
+					cycleSize++;
+					stepsCount = lcm(BigInteger.valueOf(stepsCount), BigInteger.valueOf(instructionStepIndex));
+				}
+			}
+		}
+		println(stepsCount);
+	}
+
+	/**
+	 * Lcm.
+	 *
+	 * @param number1 the number 1
+	 * @param number2 the number 2
+	 * @return the long
+	 */
+	public static long lcm(final BigInteger number1, final BigInteger number2) {
+		final BigInteger gcd = number1.gcd(number2);
+		final BigInteger productAbsoluteValue = number1.multiply(number2).abs();
+		return productAbsoluteValue.divide(gcd).longValue();
 	}
 
 }
