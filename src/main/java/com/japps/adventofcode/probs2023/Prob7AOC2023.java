@@ -105,55 +105,69 @@ public final class Prob7AOC2023 extends AbstractSolvable implements Loggable {
 			 final Map<Character, Long> handCharFrequencyMap
 			    = hand.value.chars().mapToObj(c -> (char)c).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 			 final Map<Character, Long> convertedCharFrequencyMap = convertJCardForHighestStrength(handCharFrequencyMap);
-			 if (isFiveOfAKind(convertedCharFrequencyMap)) {
-				 fiveOfAKindHandTypeList.add(hand);
-			 } else if (isFourOfAKind(convertedCharFrequencyMap)) {
-				 fourOfAKindHandTypeList.add(hand);
-			 } else if (isFullHouse(convertedCharFrequencyMap)) {
-				 fullHouseHandTypeList.add(hand);
-			 } else if (isThreeOfAKind(convertedCharFrequencyMap)) {
-				 threeOfAKindHandTypeList.add(hand);
-			 } else if (isTwoPair(convertedCharFrequencyMap)) {
-				 twoPairHandTypeList.add(hand);
-			 } else if (isOnePair(convertedCharFrequencyMap)) {
-				 onePairHandTypeList.add(hand);
-			 } else if (isHighCard(convertedCharFrequencyMap)) {
-				 highCardHandTypeList.add(hand);
-			 }
+			 groupHandsByType(fiveOfAKindHandTypeList, fourOfAKindHandTypeList, fullHouseHandTypeList,
+					threeOfAKindHandTypeList, twoPairHandTypeList, onePairHandTypeList, highCardHandTypeList, hand,
+					convertedCharFrequencyMap);
 		}
 		final Map<Hand, Integer> handRanks = new HashMap<>();
 		int highestRankYet = 0;
 		if (CollectionUtils.isNotEmpty(highCardHandTypeList)) {
-			Collections.sort(highCardHandTypeList, Hand::partTwoCompare);
-			highestRankYet = processMap(highCardHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(highCardHandTypeList, handRanks, highestRankYet, Hand::partTwoCompare);
 		}
 		if (CollectionUtils.isNotEmpty(onePairHandTypeList)) {
-			Collections.sort(onePairHandTypeList, Hand::partTwoCompare);
-			highestRankYet = processMap(onePairHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(onePairHandTypeList, handRanks, highestRankYet, Hand::partTwoCompare);
 		}
 		if (CollectionUtils.isNotEmpty(twoPairHandTypeList)) {
-			Collections.sort(twoPairHandTypeList, Hand::partTwoCompare);
-			highestRankYet = processMap(twoPairHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(twoPairHandTypeList, handRanks, highestRankYet, Hand::partTwoCompare);
 		}
 		if (CollectionUtils.isNotEmpty(threeOfAKindHandTypeList)) {
-			Collections.sort(threeOfAKindHandTypeList, Hand::partTwoCompare);
-			highestRankYet = processMap(threeOfAKindHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(threeOfAKindHandTypeList, handRanks, highestRankYet, Hand::partTwoCompare);
 		}
 		if (CollectionUtils.isNotEmpty(fullHouseHandTypeList)) {
-			Collections.sort(fullHouseHandTypeList, Hand::partTwoCompare);
-			highestRankYet = processMap(fullHouseHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(fullHouseHandTypeList, handRanks, highestRankYet, Hand::partTwoCompare);
 		}
 		if (CollectionUtils.isNotEmpty(fourOfAKindHandTypeList)) {
-			Collections.sort(fourOfAKindHandTypeList, Hand::partTwoCompare);
-			highestRankYet = processMap(fourOfAKindHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(fourOfAKindHandTypeList, handRanks, highestRankYet, Hand::partTwoCompare);
 		}
 		if (CollectionUtils.isNotEmpty(fiveOfAKindHandTypeList)) {
-			Collections.sort(fiveOfAKindHandTypeList, Hand::partTwoCompare);
-			highestRankYet = processMap(fiveOfAKindHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(fiveOfAKindHandTypeList, handRanks, highestRankYet, Hand::partTwoCompare);
 		}
 
-		println(handRanks.keySet().stream().mapToLong(hand -> hand.bid * handRanks.get(hand)).sum());
+		println(handRanks.entrySet().stream().mapToLong(entry -> entry.getKey().bid * Long.valueOf(entry.getValue())).sum());
 
+	}
+
+	private void groupHandsByType(final List<Hand> fiveOfAKindHandTypeList, final List<Hand> fourOfAKindHandTypeList,
+			final List<Hand> fullHouseHandTypeList, final List<Hand> threeOfAKindHandTypeList,
+			final List<Hand> twoPairHandTypeList, final List<Hand> onePairHandTypeList,
+			final List<Hand> highCardHandTypeList, final Hand hand,
+			final Map<Character, Long> convertedCharFrequencyMap) {
+		if (isFiveOfAKind(convertedCharFrequencyMap)) {
+			 fiveOfAKindHandTypeList.add(hand);
+		 } else if (isFourOfAKind(convertedCharFrequencyMap)) {
+			 fourOfAKindHandTypeList.add(hand);
+		 } else if (isFullHouse(convertedCharFrequencyMap)) {
+			 fullHouseHandTypeList.add(hand);
+		 } else if (isThreeOfAKind(convertedCharFrequencyMap)) {
+			 threeOfAKindHandTypeList.add(hand);
+		 } else if (isTwoPair(convertedCharFrequencyMap)) {
+			 twoPairHandTypeList.add(hand);
+		 } else if (isOnePair(convertedCharFrequencyMap)) {
+			 onePairHandTypeList.add(hand);
+		 } else if (isHighCard(convertedCharFrequencyMap)) {
+			 highCardHandTypeList.add(hand);
+		 }
+	}
+
+	private int processAndDetermineRanks(final List<Hand> handTypeList, final Map<Hand, Integer> handRanks,
+			final int highestRankYet, final Comparator<? super Hand> handComparator) {
+		if (handComparator != null) {
+			Collections.sort(handTypeList, handComparator);
+		} else {
+			Collections.sort(handTypeList);
+		}
+
+		return processMap(handTypeList, handRanks, highestRankYet);
 	}
 
 	/**
@@ -198,54 +212,35 @@ public final class Prob7AOC2023 extends AbstractSolvable implements Loggable {
 			 final Hand hand = new Hand(handBidPair[0], Long.valueOf(handBidPair[1]));
 			 final Map<Character, Long> handCharFrequencyMap
 			    = hand.value.chars().mapToObj(c -> (char)c).collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
-			 if (isFiveOfAKind(handCharFrequencyMap)) {
-				 fiveOfAKindHandTypeList.add(hand);
-			 } else if (isFourOfAKind(handCharFrequencyMap)) {
-				 fourOfAKindHandTypeList.add(hand);
-			 } else if (isFullHouse(handCharFrequencyMap)) {
-				 fullHouseHandTypeList.add(hand);
-			 } else if (isThreeOfAKind(handCharFrequencyMap)) {
-				 threeOfAKindHandTypeList.add(hand);
-			 } else if (isTwoPair(handCharFrequencyMap)) {
-				 twoPairHandTypeList.add(hand);
-			 } else if (isOnePair(handCharFrequencyMap)) {
-				 onePairHandTypeList.add(hand);
-			 } else if (isHighCard(handCharFrequencyMap)) {
-				 highCardHandTypeList.add(hand);
-			 }
+			 groupHandsByType(fiveOfAKindHandTypeList, fourOfAKindHandTypeList, fullHouseHandTypeList,
+					threeOfAKindHandTypeList, twoPairHandTypeList, onePairHandTypeList, highCardHandTypeList, hand,
+					handCharFrequencyMap);
 		}
 		final Map<Hand, Integer> handRanks = new HashMap<>();
 		int highestRankYet = 0;
 		if (CollectionUtils.isNotEmpty(highCardHandTypeList)) {
-			Collections.sort(highCardHandTypeList);
-			highestRankYet = processMap(highCardHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(highCardHandTypeList, handRanks, highestRankYet, null);
 		}
 		if (CollectionUtils.isNotEmpty(onePairHandTypeList)) {
-			Collections.sort(onePairHandTypeList);
-			highestRankYet = processMap(onePairHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(onePairHandTypeList, handRanks, highestRankYet, null);
 		}
 		if (CollectionUtils.isNotEmpty(twoPairHandTypeList)) {
-			Collections.sort(twoPairHandTypeList);
-			highestRankYet = processMap(twoPairHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(twoPairHandTypeList, handRanks, highestRankYet, null);
 		}
 		if (CollectionUtils.isNotEmpty(threeOfAKindHandTypeList)) {
-			Collections.sort(threeOfAKindHandTypeList);
-			highestRankYet = processMap(threeOfAKindHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(threeOfAKindHandTypeList, handRanks, highestRankYet, null);
 		}
 		if (CollectionUtils.isNotEmpty(fullHouseHandTypeList)) {
-			Collections.sort(fullHouseHandTypeList);
-			highestRankYet = processMap(fullHouseHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(fullHouseHandTypeList, handRanks, highestRankYet, null);
 		}
 		if (CollectionUtils.isNotEmpty(fourOfAKindHandTypeList)) {
-			Collections.sort(fourOfAKindHandTypeList);
-			highestRankYet = processMap(fourOfAKindHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(fourOfAKindHandTypeList, handRanks, highestRankYet, null);
 		}
 		if (CollectionUtils.isNotEmpty(fiveOfAKindHandTypeList)) {
-			Collections.sort(fiveOfAKindHandTypeList);
-			highestRankYet = processMap(fiveOfAKindHandTypeList, handRanks, highestRankYet);
+			highestRankYet = processAndDetermineRanks(fiveOfAKindHandTypeList, handRanks, highestRankYet, null);
 		}
 
-		println(handRanks.keySet().stream().mapToLong(hand -> hand.bid * handRanks.get(hand)).sum());
+		println(handRanks.entrySet().stream().mapToLong(entry -> entry.getKey().bid * Long.valueOf(entry.getValue())).sum());
 	}
 
 	private int processMap(final List<Hand> handList, final Map<Hand, Integer> handRanks, final int highestRankYet) {
