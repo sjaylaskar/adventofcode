@@ -7,17 +7,25 @@
 package com.japps.adventofcode.probs2023;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
 
+/**
+ * The prob 14 AOC 2023.
+ *
+ * @author Subhajoy Laskar
+ * @version 1.0
+ */
 public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 
 	/** The instance. */
 	private static final Prob14AOC2023 INSTANCE = instance();
 
 	/**
+	 * Instantiates a new prob 14 AOC 2023.
 	 */
 	private Prob14AOC2023() {
 
@@ -26,6 +34,7 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 	/**
 	 * Instance.
 	 *
+	 * @return the prob 14 AOC 2023
 	 */
 	private static Prob14AOC2023 instance() {
 
@@ -63,15 +72,19 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 			}
 		}
 
-		// tiltPart1(loads);
-		// calculateLoadSum(loads);
+		final char[][] originalLoads = Arrays.copyOf(loads, loads.length);
 
-		tiltPart2(loads);
+		tiltPart1(loads);
 		calculateLoadSum(loads);
+
+		tiltPart2(originalLoads);
+		calculateLoadSum(originalLoads);
 	}
 
-	/**mmmmmmmmmmmmmmmmmm
-	 * @param loads
+	/**
+	 * Tilt part 2.
+	 *
+	 * @param loads the loads
 	 */
 	private void tiltPart2(final char[][] loads) {
 		for (int i = 1; i <= 1000; i++) {
@@ -86,6 +99,11 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 		}
 	}
 
+	/**
+	 * East tilt.
+	 *
+	 * @param loads the loads
+	 */
 	private void eastTilt(final char[][] loads) {
 		for (int col = loads[0].length - 2; col >= 0; col--) {
 			for (int row = 0; row < loads.length; row++) {
@@ -104,6 +122,11 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 		}
 	}
 
+	/**
+	 * South tilt.
+	 *
+	 * @param loads the loads
+	 */
 	private void southTilt(final char[][] loads) {
 		for (int row = loads.length - 2; row >= 0; row--) {
 			for (int col = 0; col < loads[row].length; col++) {
@@ -122,6 +145,11 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 		}
 	}
 
+	/**
+	 * West tilt.
+	 *
+	 * @param loads the loads
+	 */
 	private void westTilt(final char[][] loads) {
 		for (int col = 1; col < loads[0].length; col++) {
 			for (int row = 0; row < loads.length; row++) {
@@ -140,6 +168,11 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 		}
 	}
 
+	/**
+	 * North tilt.
+	 *
+	 * @param loads the loads
+	 */
 	private void northTilt(final char[][] loads) {
 		for (int row = 1; row < loads.length; row++) {
 			for (int col = 0; col < loads[row].length; col++) {
@@ -158,6 +191,11 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 		}
 	}
 
+	/**
+	 * Calculate load sum.
+	 *
+	 * @param loads the loads
+	 */
 	private void calculateLoadSum(final char[][] loads) {
 		long loadSum = 0;
 
@@ -169,6 +207,11 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 		println(loadSum);
 	}
 
+	/**
+	 * Tilt part 1.
+	 *
+	 * @param loads the loads
+	 */
 	private void tiltPart1(final char[][] loads) {
 		northTilt(loads);
 	}
