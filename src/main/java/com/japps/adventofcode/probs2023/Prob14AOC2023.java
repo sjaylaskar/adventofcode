@@ -4,7 +4,6 @@
  * https://www.linkedin.com/in/subhajoylaskar
  */
 
-
 package com.japps.adventofcode.probs2023;
 
 import java.io.IOException;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
-
 
 public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 
@@ -48,7 +46,6 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 		}
 	}
 
-
 	/**
 	 * Compute.
 	 *
@@ -61,33 +58,118 @@ public final class Prob14AOC2023 extends AbstractSolvable implements Loggable {
 		final char[][] loads = new char[lines.size()][lines.get(0).length()];
 
 		for (int row = 0; row < lines.size(); row++) {
-			 for (int col = 0; col < lines.get(row).length(); col++) {
-				 loads[row][col] = lines.get(row).charAt(col);
-			 }
+			for (int col = 0; col < lines.get(row).length(); col++) {
+				loads[row][col] = lines.get(row).charAt(col);
+			}
 		}
 
+		// tiltPart1(loads);
+		// calculateLoadSum(loads);
+
+		tiltPart2(loads);
+		calculateLoadSum(loads);
+	}
+
+	/**mmmmmmmmmmmmmmmmmm
+	 * @param loads
+	 */
+	private void tiltPart2(final char[][] loads) {
+		for (int i = 1; i <= 1000; i++) {
+			// north
+			northTilt(loads);
+			// west
+			westTilt(loads);
+			// south
+			southTilt(loads);
+			// east
+			eastTilt(loads);
+		}
+	}
+
+	private void eastTilt(final char[][] loads) {
+		for (int col = loads[0].length - 2; col >= 0; col--) {
+			for (int row = 0; row < loads.length; row++) {
+				if (loads[row][col] == 'O') {
+					for (int index = col; index < loads[0].length - 1; index++) {
+						if (loads[row][index + 1] == '#') {
+							break;
+						}
+						if (loads[row][index + 1] == '.') {
+							loads[row][index + 1] = loads[row][index];
+							loads[row][index] = '.';
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void southTilt(final char[][] loads) {
+		for (int row = loads.length - 2; row >= 0; row--) {
+			for (int col = 0; col < loads[row].length; col++) {
+				if (loads[row][col] == 'O') {
+					for (int index = row; index < loads.length - 1; index++) {
+						if (loads[index + 1][col] == '#') {
+							break;
+						}
+						if (loads[index + 1][col] == '.') {
+							loads[index + 1][col] = loads[index][col];
+							loads[index][col] = '.';
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void westTilt(final char[][] loads) {
+		for (int col = 1; col < loads[0].length; col++) {
+			for (int row = 0; row < loads.length; row++) {
+				if (loads[row][col] == 'O') {
+					for (int index = col; index > 0; index--) {
+						if (loads[row][index - 1] == '#') {
+							break;
+						}
+						if (loads[row][index - 1] == '.') {
+							loads[row][index - 1] = loads[row][index];
+							loads[row][index] = '.';
+						}
+					}
+				}
+			}
+		}
+	}
+
+	private void northTilt(final char[][] loads) {
 		for (int row = 1; row < loads.length; row++) {
-			 for (int col = 0; col < loads[row].length; col++) {
-				  if (loads[row][col] == 'O') {
-					  for (int index = row; index > 0; index--) {
-						  if (loads[index - 1][col] == '#') {
-							  break;
-						  }
-						  if (loads[index - 1][col] == '.') {
-							  loads[index - 1][col] = loads[index][col];
-							  loads[index][col] = '.';
-						  }
-					  }
-				  }
-			 }
+			for (int col = 0; col < loads[row].length; col++) {
+				if (loads[row][col] == 'O') {
+					for (int index = row; index > 0; index--) {
+						if (loads[index - 1][col] == '#') {
+							break;
+						}
+						if (loads[index - 1][col] == '.') {
+							loads[index - 1][col] = loads[index][col];
+							loads[index][col] = '.';
+						}
+					}
+				}
+			}
 		}
+	}
 
+	private void calculateLoadSum(final char[][] loads) {
 		long loadSum = 0;
 
 		for (int row = 0; row < loads.length; row++) {
-			loadSum += String.valueOf(loads[row]).chars().filter(character -> character == 'O').count() * (lines.size() - row);
+			loadSum += String.valueOf(loads[row]).chars().filter(character -> character == 'O').count()
+					* (loads.length - row);
 		}
 
 		println(loadSum);
+	}
+
+	private void tiltPart1(final char[][] loads) {
+		northTilt(loads);
 	}
 }
