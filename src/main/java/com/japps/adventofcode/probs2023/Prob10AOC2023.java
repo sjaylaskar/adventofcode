@@ -89,6 +89,19 @@ public final class Prob10AOC2023 extends AbstractSolvable implements Loggable {
 
 		final int[][] visitedPath = new int[rows][cols];
 
+		final Point startPos = processPath(lines, rows, cols, path, visitedPath);
+
+		final int direction = DIRECTION_MAP.get(path[startPos.getX()][startPos.getY()]).iterator().next();
+		final Point position = Point.of(startPos.getX() + DIRECTIONS_X_COORDINATE[direction],
+				startPos.getY() + DIRECTIONS_Y_COORDINATE[direction]);
+		visitedPath[position.getX()][position.getY()] = 1;
+		final int pathSize = computePart1(path, visitedPath, startPos, position, (direction + 2) % 4);
+		println(pathSize / 2);
+		println(computePart2(path, visitedPath));
+	}
+
+	private Point processPath(final List<String> lines, final int rows, final int cols, final char[][] path,
+			final int[][] visitedPath) {
 		Point startPos = null;
 
 		for (int i = 0; i < rows; i++) {
@@ -113,19 +126,12 @@ public final class Prob10AOC2023 extends AbstractSolvable implements Loggable {
 			}
 		}
 
-		for (final char c : DIRECTION_MAP.keySet()) {
-			if (directions.equals(DIRECTION_MAP.get(c))) {
-				path[startPos.getX()][startPos.getY()] = c;
+		for (final char directionCharacter : DIRECTION_MAP.keySet()) {
+			if (directions.equals(DIRECTION_MAP.get(directionCharacter))) {
+				path[startPos.getX()][startPos.getY()] = directionCharacter;
 			}
 		}
-
-		final int direction = DIRECTION_MAP.get(path[startPos.getX()][startPos.getY()]).iterator().next();
-		final Point position = Point.of(startPos.getX() + DIRECTIONS_X_COORDINATE[direction],
-				startPos.getY() + DIRECTIONS_Y_COORDINATE[direction]);
-		visitedPath[position.getX()][position.getY()] = 1;
-		final int pathSize = computePart1(path, visitedPath, startPos, position, (direction + 2) % 4);
-		println(pathSize / 2);
-		println(computePart2(path, visitedPath));
+		return startPos;
 	}
 
 	/**
