@@ -25,4 +25,8 @@ public class Point extends IntPair {
         super(x, y);
     }
 
+    public static Point of(final int x, final int y) {
+    	return new Point(x, y);
+    }
+
 }
