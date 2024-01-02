@@ -144,7 +144,7 @@ public final class Prob10AOC2023 extends AbstractSolvable implements Loggable {
 	 * @param direction the direction
 	 * @return the int
 	 */
-	public int computePart1(final char[][] path, final int[][] visitedPath, final Point startPos, final Point position,
+	private int computePart1(final char[][] path, final int[][] visitedPath, final Point startPos, final Point position,
 			int direction) {
 		int pathSize = 1;
 		char currentPipePosition = path[position.getX()][position.getY()];
@@ -175,7 +175,7 @@ public final class Prob10AOC2023 extends AbstractSolvable implements Loggable {
 	 * @param visitedPath the visited path
 	 * @return the int
 	 */
-	public int computePart2(final char[][] path, final int[][] visitedPath) {
+	private int computePart2(final char[][] path, final int[][] visitedPath) {
 		boolean isEnclosed = false;
 		int numberOfPipes = 0;
 		int numberOfEnclosedTiles = 0;

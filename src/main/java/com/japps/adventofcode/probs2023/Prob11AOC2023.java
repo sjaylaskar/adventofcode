@@ -69,8 +69,8 @@ public final class Prob11AOC2023 extends AbstractSolvable implements Loggable {
 		final List<Point> pointsPart2 = new ArrayList<>();
 		processGalaxy(pointsPart1, pointsPart2);
 
-		println(shortestPathSum(pointsPart1));
-		println(shortestPathSum(pointsPart2));
+		println(Point.shortestPathSum(pointsPart1));
+		println(Point.shortestPathSum(pointsPart2));
 	}
 
 	/**
@@ -121,30 +121,4 @@ public final class Prob11AOC2023 extends AbstractSolvable implements Loggable {
         }
 	}
 
-    /**
-     * Shortest path.
-     *
-     * @param point1 the point 1
-     * @param point2 the point 2
-     * @return the long
-     */
-    public long shortestPath(final Point point1, final Point point2) {
-        return Math.abs(point1.getX() - point2.getX()) + Math.abs(point1.getY() - point2.getY());
-    }
-
-    /**
-     * Shortest path sum.
-     *
-     * @param points the points
-     * @return the long
-     */
-    public long shortestPathSum(final List<Point> points) {
-    	long sum = 0;
-        for (int i = 0; i < points.size(); i++) {
-            for (int j = i + 1; j < points.size(); j++) {
-                sum += shortestPath(points.get(i), points.get(j));
-            }
-        }
-        return sum;
-    }
 }
