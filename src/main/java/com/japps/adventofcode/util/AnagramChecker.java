@@ -22,7 +22,7 @@ public final class AnagramChecker {
     }
 
     /** The no of chars. */
-    private static int NO_OF_CHARS = 256;
+    private static final int NO_OF_CHARS = 256;
 
     /**
      * Are anagrams.
@@ -35,8 +35,8 @@ public final class AnagramChecker {
         final char[] str1 = s1.toCharArray();
         final char[] str2 = s2.toCharArray();
 
-        final int count1[] = new int[NO_OF_CHARS];
-        final int count2[] = new int[NO_OF_CHARS];
+        final int[] count1 = new int[NO_OF_CHARS];
+        final int[] count2 = new int[NO_OF_CHARS];
 
         for (int i = 0; i < str1.length && i < str2.length; i++) {
             count1[str1[i]]++;

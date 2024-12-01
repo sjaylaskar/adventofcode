@@ -5,13 +5,9 @@
 */
 package com.japps.adventofcode.util;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.*;
+import java.nio.file.*;
+import java.util.*;
 
 /**
  * The file transferrer.
@@ -21,28 +17,12 @@ import java.util.Map;
  */
 public final class FileTransferrer implements Loggable {
 
-    private static final String SOURCE_PATH_2020 = "data/2020";
-    private static final String DESTINATION_PATH_2020 = "src/main/resources/com/japps/adventofcode/probs2020";
-
-    private static final String SOURCE_PATH_2021 = "data/2021";
-    private static final String DESTINATION_PATH_2021 = "src/main/resources/com/japps/adventofcode/probs2021";
-
-    private static final String SOURCE_PATH_2022 = "data/2022";
-    private static final String DESTINATION_PATH_2022 = "src/main/resources/com/japps/adventofcode/probs2022";
-
-    private static final String SOURCE_PATH_2023 = "data/2023";
-    private static final String DESTINATION_PATH_2023 = "src/main/resources/com/japps/adventofcode/probs2023";
-
     private static final String SOURCE_PATH_2024 = "data/2024";
     private static final String DESTINATION_PATH_2024 = "src/main/resources/com/japps/adventofcode/probs2024";
 
     private static final Map<String, String> SRC_DEST_MAP = new HashMap<>();
 
     static {
-        SRC_DEST_MAP.put(SOURCE_PATH_2020, DESTINATION_PATH_2020);
-        SRC_DEST_MAP.put(SOURCE_PATH_2021, DESTINATION_PATH_2021);
-        SRC_DEST_MAP.put(SOURCE_PATH_2022, DESTINATION_PATH_2022);
-        SRC_DEST_MAP.put(SOURCE_PATH_2023, DESTINATION_PATH_2023);
         SRC_DEST_MAP.put(SOURCE_PATH_2024, DESTINATION_PATH_2024);
     }
 
@@ -83,8 +63,7 @@ public final class FileTransferrer implements Loggable {
      *
      * @param sourceFile the source file
      * @param destinationPath the destination path
-     * @return the path
-     */
+	 */
     private static synchronized void copy(final Path sourceFile, final Path destinationPath) {
 
         try {

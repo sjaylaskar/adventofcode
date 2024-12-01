@@ -66,7 +66,7 @@ public final class Prob1AOC2024 extends AbstractSolvable implements Loggable {
 		List<Long> leftList = new ArrayList<>();
 		List<Long> rightList = new ArrayList<>();
 		for (String line : lines) {
-			String []tokens = line.split("   ");
+			String []tokens = line.split(" {3}");
 			leftList.add(Long.valueOf(tokens[0]));
 			rightList.add(Long.valueOf(tokens[1]));
 		}

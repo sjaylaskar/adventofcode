@@ -5,7 +5,7 @@
 */
 package com.japps.adventofcode.util;
 
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.math.*;
 
 /**
  * The problem solver util.

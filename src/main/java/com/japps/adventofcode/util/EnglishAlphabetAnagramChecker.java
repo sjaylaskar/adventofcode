@@ -165,7 +165,7 @@ public final class EnglishAlphabetAnagramChecker implements Loggable {
 		 * @param s2 the s 2
 		 * @return the anagram data
 		 */
-		private static final AnagramData of(final String s1, final String s2) {
+		private static AnagramData of(final String s1, final String s2) {
 			final AnagramData anagramData = new AnagramData();
 			if (s1 != null) {
 				validate(s1);
