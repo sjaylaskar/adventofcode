@@ -11,7 +11,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<jdk.version>19</jdk.version>
+		<jdk.version>23</jdk.version>
 		<junit.version>4.13.2</junit.version>
 		<log4j-core.version>2.17.1</log4j-core.version>
 		<log4j-api.version>${log4j-core.version}</log4j-api.version>
