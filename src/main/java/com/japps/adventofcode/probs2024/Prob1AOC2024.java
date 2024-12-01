@@ -1,5 +1,4 @@
 /*
- * Id: Prob1AOC2023.java 01-Dec-2024 SubhajoyLaskar
  * Copyright (©) 2024 Subhajoy Laskar
  * https://www.linkedin.com/in/subhajoylaskar
  */
