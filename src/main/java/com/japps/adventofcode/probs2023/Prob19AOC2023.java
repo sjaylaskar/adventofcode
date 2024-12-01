@@ -79,7 +79,7 @@ public final class Prob19AOC2023 extends AbstractSolvable implements Loggable {
 		for (final String line : lines) {
 			if (StringUtils.isBlank(line)) {
 				workflowsProcessed = true;
-				println(workflowMap);
+				// println(workflowMap);
 				continue;
 			}
 			if (!workflowsProcessed) {
@@ -92,7 +92,7 @@ public final class Prob19AOC2023 extends AbstractSolvable implements Loggable {
 						.asList(line.substring(1, line.lastIndexOf('}')).split(",")).stream().collect(Collectors
 								.toMap(value -> value.split("=")[0], value -> Long.valueOf(value.split("=")[1])));
 				final Part part = Part.of(partValuesMap);
-				println(part);
+				// println(part);
 				if (Status.A.equals(process(part, workflowMap))) {
 					acceptedParts.add(part);
 				}
