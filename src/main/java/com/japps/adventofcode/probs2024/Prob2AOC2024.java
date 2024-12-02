@@ -11,42 +11,19 @@ import java.util.stream.*;
 
 import com.japps.adventofcode.util.*;
 
-/**
- * The prob 2 AOC 2024.
- *
- * @author Subhajoy Laskar
- * @version 1.0
- */
 public final class Prob2AOC2024 extends AbstractSolvable implements Loggable {
 
-    /** The instance. */
     private static final Prob2AOC2024 INSTANCE = instance();
 
-
-    /**
-     * Instantiates a new prob.
-     */
     private Prob2AOC2024() {
 
     }
 
-
-    /**
-     * Instance.
-     *
-     * @return the prob 01
-     */
-    private static Prob2AOC2024 instance() {
+	private static Prob2AOC2024 instance() {
 
         return new Prob2AOC2024();
     }
 
-
-    /**
-     * The main method.
-     *
-     * @param args the arguments
-     */
     public static void main(final String[] args) {
 
         try {
@@ -56,12 +33,7 @@ public final class Prob2AOC2024 extends AbstractSolvable implements Loggable {
         }
     }
 
-    /**
-     * Compute.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    private void compute() throws IOException {
+	private void compute() throws IOException {
 		List<String> lines = lines();
 		safeCount(lines, false);
 		safeCount(lines, true);

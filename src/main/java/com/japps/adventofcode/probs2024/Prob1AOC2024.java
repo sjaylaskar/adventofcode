@@ -10,42 +10,19 @@ import java.util.stream.*;
 
 import com.japps.adventofcode.util.*;
 
-/**
- * The prob 1 AOC 2024.
- *
- * @author Subhajoy Laskar
- * @version 1.0
- */
 public final class Prob1AOC2024 extends AbstractSolvable implements Loggable {
 
-    /** The instance. */
     private static final Prob1AOC2024 INSTANCE = instance();
 
-
-    /**
-     * Instantiates a new prob 01.
-     */
     private Prob1AOC2024() {
 
     }
 
-
-    /**
-     * Instance.
-     *
-     * @return the prob 01
-     */
     private static Prob1AOC2024 instance() {
 
         return new Prob1AOC2024();
     }
 
-
-    /**
-     * The main method.
-     *
-     * @param args the arguments
-     */
     public static void main(final String[] args) {
 
         try {
@@ -55,11 +32,6 @@ public final class Prob1AOC2024 extends AbstractSolvable implements Loggable {
         }
     }
 
-    /**
-     * Compute.
-     *
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
     private void compute() throws IOException {
 		List<String> lines = lines();
 		List<Long> leftList = new ArrayList<>();
@@ -72,7 +44,6 @@ public final class Prob1AOC2024 extends AbstractSolvable implements Loggable {
 		Collections.sort(leftList);
 		Collections.sort(rightList);
 		println(IntStream.range(0, leftList.size()).mapToLong(index -> Math.abs(rightList.get(index) - leftList.get(index))).sum());
-
 		println(leftList.stream().mapToLong(n -> n * Collections.frequency(rightList, n)).sum());
     }
 }
