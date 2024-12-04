@@ -6,6 +6,7 @@
 target/
 */target/**
 .settings
+.idea
 
 # Log file
 *.log
