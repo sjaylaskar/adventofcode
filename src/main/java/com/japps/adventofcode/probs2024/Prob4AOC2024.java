@@ -31,6 +31,20 @@ public final class Prob4AOC2024 extends AbstractSolvable implements Loggable {
         }
     }
 
+    private static final List<List<IntPair>> XMAS_COORDINATE_DIFFS =
+            List.of(
+                    List.of(IntPair.of(0, 1), IntPair.of(0, 2), IntPair.of(0, 3)),
+                    List.of(IntPair.of(0, -1), IntPair.of(0, -2), IntPair.of(0, -3)),
+                    List.of(IntPair.of(1, 0), IntPair.of(2, 0), IntPair.of(3, 0)),
+                    List.of(IntPair.of(-1, 0), IntPair.of(-2, 0), IntPair.of(-3, 0)),
+                    List.of(IntPair.of(1, 1), IntPair.of(2, 2), IntPair.of(3, 3)),
+                    List.of(IntPair.of(1, -1), IntPair.of(2, -2), IntPair.of(3, -3)),
+                    List.of(IntPair.of(-1, 1), IntPair.of(-2, 2), IntPair.of(-3, 3)),
+                    List.of(IntPair.of(-1, -1), IntPair.of(-2, -2), IntPair.of(-3, -3)));
+
+    private static final List<IntPair> MS_COORDINATE_DIFFS =
+            List.of(IntPair.of(-1, -1), IntPair.of(1, 1), IntPair.of(-1, 1), IntPair.of(1, -1));
+
     private void compute() throws IOException {
 		List<String> lines = lines();
         List<char[]> linesArrayList = lines.stream().map(String::toCharArray).toList();
@@ -44,30 +58,9 @@ public final class Prob4AOC2024 extends AbstractSolvable implements Loggable {
         for (int i = 0; i < linesArray.length; i++) {
             for (int j = 0; j < linesArray[i].length; j++) {
                 if (linesArray[i][j] == 'X') {
-                    if (isValidXMAS(linesArray, List.of(IntPair.of(i, j + 1), IntPair.of(i, j + 2), IntPair.of(i, j + 3)))) {
-                        ++xmasCount;
-                    }
-                    if (isValidXMAS(linesArray, List.of(IntPair.of(i, j - 1), IntPair.of(i, j - 2), IntPair.of(i, j - 3)))) {
-                        ++xmasCount;
-                    }
-                    if (isValidXMAS(linesArray, List.of(IntPair.of(i + 1, j), IntPair.of(i + 2, j), IntPair.of(i + 3, j)))) {
-                        ++xmasCount;
-                    }
-                    if (isValidXMAS(linesArray, List.of(IntPair.of(i - 1, j), IntPair.of(i - 2, j), IntPair.of(i - 3, j)))) {
-                        ++xmasCount;
-                    }
-                    if (isValidXMAS(linesArray, List.of(IntPair.of(i + 1, j + 1), IntPair.of(i + 2, j + 2), IntPair.of(i + 3, j + 3)))) {
-                        ++xmasCount;
-                    }
-                    if (isValidXMAS(linesArray, List.of(IntPair.of(i + 1, j - 1), IntPair.of(i + 2, j - 2), IntPair.of(i + 3, j - 3)))) {
-                        ++xmasCount;
-                    }
-                    if (isValidXMAS(linesArray, List.of(IntPair.of(i - 1, j + 1), IntPair.of(i - 2, j + 2), IntPair.of(i - 3, j + 3)))) {
-                        ++xmasCount;
-                    }
-                    if (isValidXMAS(linesArray, List.of(IntPair.of(i - 1, j - 1), IntPair.of(i - 2, j - 2), IntPair.of(i - 3, j - 3)))) {
-                        ++xmasCount;
-                    }
+                    int xCoord = i;
+                    int yCoord = j;
+                    xmasCount += XMAS_COORDINATE_DIFFS.stream().filter(xcd -> isValidXMAS(linesArray, coordinatesFromDiffs(xCoord, yCoord, xcd))).count();
                 }
             }
         }
@@ -88,7 +81,7 @@ public final class Prob4AOC2024 extends AbstractSolvable implements Loggable {
         for (int i = 0; i < linesArray.length; i++) {
             for (int j = 0; j < linesArray[i].length; j++) {
                 if (linesArray[i][j] == 'A') {
-                    if (isValidMASAsX(linesArray, List.of(IntPair.of(i - 1, j - 1), IntPair.of(i + 1, j + 1), IntPair.of(i - 1, j + 1), IntPair.of(i + 1, j - 1)))) {
+                    if (isValidMASAsX(linesArray, coordinatesFromDiffs(i, j, MS_COORDINATE_DIFFS))) {
                         ++masAsXCount;
                     }
                 }
@@ -105,5 +98,9 @@ public final class Prob4AOC2024 extends AbstractSolvable implements Loggable {
                 || (linesArray[msCoordinates.get(0).getX()][msCoordinates.get(0).getY()] == 'S' && linesArray[msCoordinates.get(1).getX()][msCoordinates.get(1).getY()] == 'M'))
                 && ((linesArray[msCoordinates.get(2).getX()][msCoordinates.get(2).getY()] == 'M' && linesArray[msCoordinates.get(3).getX()][msCoordinates.get(3).getY()] == 'S')
                 || (linesArray[msCoordinates.get(2).getX()][msCoordinates.get(2).getY()] == 'S' && linesArray[msCoordinates.get(3).getX()][msCoordinates.get(3).getY()] == 'M'));
+    }
+
+    private List<IntPair> coordinatesFromDiffs(int xCoord, int yCoord, List<IntPair> xcd) {
+        return xcd.stream().map(coordDiff -> IntPair.of(xCoord + coordDiff.getX(), yCoord + coordDiff.getY())).toList();
     }
 }
