@@ -7,6 +7,8 @@ package com.japps.adventofcode.util;
 
 import org.apache.commons.lang3.math.*;
 
+import java.util.List;
+
 /**
  * The problem solver util.
  *
@@ -54,5 +56,10 @@ public final class ProblemSolverUtil implements Loggable {
     private static String determineInputFileDirectoryPath(final Class<?> clazz) {
 
         return SRC_MAIN_RESOURCES + clazz.getPackageName().replace(".", "/");
+    }
+
+    public static char[][] linesAsArray(List<String> lines) {
+        List<char[]> linesArrayList = lines.stream().map(String::toCharArray).toList();
+        return linesArrayList.toArray(new char[0][0]);
     }
 }

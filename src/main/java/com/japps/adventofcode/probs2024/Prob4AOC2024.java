@@ -4,10 +4,12 @@
  */
 package com.japps.adventofcode.probs2024;
 
-import java.io.*;
-import java.util.*;
+import com.japps.adventofcode.util.AbstractSolvable;
+import com.japps.adventofcode.util.IntPair;
+import com.japps.adventofcode.util.Loggable;
 
-import com.japps.adventofcode.util.*;
+import java.io.IOException;
+import java.util.List;
 
 public final class Prob4AOC2024 extends AbstractSolvable implements Loggable {
 
@@ -46,9 +48,7 @@ public final class Prob4AOC2024 extends AbstractSolvable implements Loggable {
             List.of(IntPair.of(-1, -1), IntPair.of(1, 1), IntPair.of(-1, 1), IntPair.of(1, -1));
 
     private void compute() throws IOException {
-		List<String> lines = lines();
-        List<char[]> linesArrayList = lines.stream().map(String::toCharArray).toList();
-        char[][] linesArray = linesArrayList.toArray(new char[0][0]);
+        char[][] linesArray = linesAsArray();
         computeXmasCount(linesArray);
         computeMasAsXCount(linesArray);
     }

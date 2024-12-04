@@ -42,6 +42,10 @@ public interface Solvable {
         }
     }
 
+    default char[][] linesAsArray() throws IOException {
+        return ProblemSolverUtil.linesAsArray(lines());
+    }
+
     /**
      * Read file bytes.
      *
