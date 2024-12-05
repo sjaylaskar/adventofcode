@@ -38,6 +38,13 @@ public class IntPair {
         this.y = y;
     }
 
+    public IntPair flip() {
+        int swapper = x;
+        x = y;
+        y = swapper;
+        return this;
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -108,7 +115,4 @@ public class IntPair {
 	public void setY(final int y) {
 		this.y = y;
 	}
-
-
-
 }
