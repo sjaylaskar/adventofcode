@@ -45,24 +45,30 @@ public final class Prob5AOC2024 extends AbstractSolvable implements Loggable {
     private void compute() throws IOException {
 		List<String> lines = lines();
         Set<IntPair> pageRules = lines.subList(0, PAGE_RULE_LINE_END_ROW).stream().map(this::toIntPair).collect(Collectors.toSet());
-        Map<Integer, Set<Integer>> pagesAfterMap = new HashMap<>();
-        pageRules.forEach(pair -> pagesAfterMap.computeIfAbsent(pair.getX(), _ -> new HashSet<>()).add(pair.getY()));
-        computeMiddlePagesSum(lines, pageRules, pagesAfterMap, false);
-        computeMiddlePagesSum(lines, pageRules, pagesAfterMap, true);
+        Map<Integer, Set<Integer>> pagesAfterMap = pagesAfterMap(pageRules);
+        computeMiddlePagesSum(lines, pageRules, pagesAfterMap);
     }
 
-    private void computeMiddlePagesSum(List<String> lines, Set<IntPair> pageRules, Map<Integer, Set<Integer>> pagesAfterMap, boolean fixIncorrectPagePairs) {
-        List<Integer> middlePages = new ArrayList<>();
+    private static Map<Integer, Set<Integer>> pagesAfterMap(Set<IntPair> pageRules) {
+        Map<Integer, Set<Integer>> pagesAfterMap = new HashMap<>();
+        pageRules.forEach(pair -> pagesAfterMap.computeIfAbsent(pair.getX(), _ -> new HashSet<>()).add(pair.getY()));
+        return pagesAfterMap;
+    }
+
+    private void computeMiddlePagesSum(List<String> lines, Set<IntPair> pageRules, Map<Integer, Set<Integer>> pagesAfterMap) {
+        List<Integer> validPages = new ArrayList<>();
+        List<Integer> correctedPages = new ArrayList<>();
         for (String line : lines.subList(PAGE_RULE_LINE_END_ROW + 1, lines.size())) {
             List<Integer> pages = Stream.of(line.split(PAGE_SPLITTER)).map(Integer::valueOf).collect(Collectors.toList());
-            if (!isInvalid(pages, pageRules) && !fixIncorrectPagePairs) {
-                middlePages.add(pages.get(pages.size() / 2));
-            } else if (isInvalid(pages, pageRules) && fixIncorrectPagePairs) {
+            if (isInvalid(pages, pageRules)) {
                 pages.sort(pagesComparator(pagesAfterMap));
-                middlePages.add(pages.get(pages.size() / 2));
+                correctedPages.add(pages.get(pages.size() / 2));
+            } else {
+                validPages.add(pages.get(pages.size() / 2));
             }
         }
-        println(middlePages.stream().mapToInt(Integer::valueOf).sum());
+        println(validPages.stream().mapToInt(Integer::valueOf).sum());
+        println(correctedPages.stream().mapToInt(Integer::valueOf).sum());
     }
 
     private static Comparator<Integer> pagesComparator(Map<Integer, Set<Integer>> pagesAfterMap) {
