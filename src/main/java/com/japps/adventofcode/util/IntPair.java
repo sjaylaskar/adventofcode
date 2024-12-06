@@ -26,6 +26,10 @@ public class IntPair {
     	return new IntPair(x, y);
     }
 
+    public static IntPair of(final IntPair intPair) {
+        return new IntPair(intPair.getX(), intPair.getY());
+    }
+
     /**
      * Instantiates a new pair.
      *
@@ -39,10 +43,7 @@ public class IntPair {
     }
 
     public IntPair flip() {
-        int swapper = x;
-        x = y;
-        y = swapper;
-        return this;
+        return IntPair.of(this.y, this.x);
     }
 
     /**
@@ -71,6 +72,10 @@ public class IntPair {
 		}
         final IntPair other = (IntPair) obj;
         return x == other.x && y == other.y;
+    }
+
+    public boolean equals(int x, int y) {
+        return (this.x == x && this.y == y);
     }
 
     /**
