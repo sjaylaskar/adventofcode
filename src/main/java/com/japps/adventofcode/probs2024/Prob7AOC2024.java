@@ -17,8 +17,8 @@ import java.util.stream.Stream;
 public final class Prob7AOC2024 extends AbstractSolvable implements Loggable {
 
     private static final Prob7AOC2024 INSTANCE = instance();
-    public static final String LINE_SEPARATOR = ":";
-    public static final String SPACE = " ";
+    private static final String LINE_SEPARATOR = ":";
+    private static final String SPACE = " ";
 
     enum OPERATION {
         SUM(Long::sum), MULTIPLY((Long x, Long y) -> x * y), CONCAT((Long x, Long y) -> Long.valueOf(String.valueOf(x) + y));
@@ -29,11 +29,11 @@ public final class Prob7AOC2024 extends AbstractSolvable implements Loggable {
             this.evaluation = evaluation;
         }
 
-        public BiFunction<Long, Long, Long> evaluation() {
+        BiFunction<Long, Long, Long> evaluation() {
             return evaluation;
         }
 
-        public Long apply(Long x, Long y) {
+        Long apply(Long x, Long y) {
             return evaluation().apply(x, y);
         }
     }
@@ -76,15 +76,22 @@ public final class Prob7AOC2024 extends AbstractSolvable implements Loggable {
     }
 
     private boolean isComputeValue(long value, List<Long> equationValues, boolean isConcatAllowed) {
-        if (equationValues.size() == 1) {
-            return equationValues.getFirst().equals(value);
-        }
-        if (isComputeValue(value, computeOperatedList(equationValues, OPERATION.SUM), isConcatAllowed)) {
-            return true;
-        }
-        if (isComputeValue(value, computeOperatedList(equationValues, OPERATION.MULTIPLY), isConcatAllowed)) {
-            return true;
-        }
+        return (equationValues.size() == 1)
+               ? equationValues.getFirst().equals(value)
+               : isSumComputation(value, equationValues, isConcatAllowed)
+                || isMultiplyComputation(value, equationValues, isConcatAllowed)
+                || isConcatComputation(value, equationValues, isConcatAllowed);
+    }
+
+    private boolean isSumComputation(long value, List<Long> equationValues, boolean isConcatAllowed) {
+        return isComputeValue(value, computeOperatedList(equationValues, OPERATION.SUM), isConcatAllowed);
+    }
+
+    private boolean isMultiplyComputation(long value, List<Long> equationValues, boolean isConcatAllowed) {
+        return isComputeValue(value, computeOperatedList(equationValues, OPERATION.MULTIPLY), isConcatAllowed);
+    }
+
+    private boolean isConcatComputation(long value, List<Long> equationValues, boolean isConcatAllowed) {
         return isConcatAllowed && isComputeValue(value, computeOperatedList(equationValues, OPERATION.CONCAT), true);
     }
 
