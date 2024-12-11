@@ -37,7 +37,6 @@ public class IntPair {
      * @param y the y
      */
     public IntPair(final int x, final int y) {
-
         this.x = x;
         this.y = y;
     }

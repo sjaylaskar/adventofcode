@@ -46,6 +46,10 @@ public interface Solvable {
         return ProblemSolverUtil.linesAsArray(lines());
     }
 
+    default int[][] linesAsIntArray() throws IOException {
+        return ProblemSolverUtil.linesAsIntArray(lines());
+    }
+
     /**
      * Read file bytes.
      *

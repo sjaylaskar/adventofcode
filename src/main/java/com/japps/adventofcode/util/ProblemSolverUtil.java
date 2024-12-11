@@ -7,7 +7,10 @@ package com.japps.adventofcode.util;
 
 import org.apache.commons.lang3.math.*;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * The problem solver util.
@@ -61,5 +64,13 @@ public final class ProblemSolverUtil implements Loggable {
     public static char[][] linesAsArray(List<String> lines) {
         List<char[]> linesArrayList = lines.stream().map(String::toCharArray).toList();
         return linesArrayList.toArray(new char[0][0]);
+    }
+
+    public static int[][] linesAsIntArray(List<String> lines) {
+        return Stream.of(linesAsArray(lines)).map(ProblemSolverUtil::convertToIntArray).toList().toArray(new int[0][0]);
+    }
+
+    private static int[] convertToIntArray(char[] line) {
+        return IntStream.range(0, line.length).map(index -> Integer.parseInt(String.valueOf(line[index]))).toArray();
     }
 }
