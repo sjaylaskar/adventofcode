@@ -14,7 +14,7 @@ import java.util.Objects;
  * @author Subhajoy Laskar
  * @version 1.0
  */
-public class IntPair {
+public class IntPair implements Comparable<IntPair> {
 
     /** The x. */
     private int x;
@@ -119,4 +119,10 @@ public class IntPair {
 	public void setY(final int y) {
 		this.y = y;
 	}
+
+    @Override
+    public int compareTo(IntPair other) {
+        int compare = Integer.compare(this.getX(), other.getX());
+        return compare == 0 ? Integer.compare(this.getY(), other.getY()) : compare;
+    }
 }

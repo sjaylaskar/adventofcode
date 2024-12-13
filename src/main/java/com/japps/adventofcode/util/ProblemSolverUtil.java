@@ -5,9 +5,8 @@
 */
 package com.japps.adventofcode.util;
 
-import org.apache.commons.lang3.math.*;
+import org.apache.commons.lang3.math.NumberUtils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -72,5 +71,37 @@ public final class ProblemSolverUtil implements Loggable {
 
     private static int[] convertToIntArray(char[] line) {
         return IntStream.range(0, line.length).map(index -> Integer.parseInt(String.valueOf(line[index]))).toArray();
+    }
+
+    public static int cols(char[][] arr, int row) {
+        return arr[row].length;
+    }
+
+    public static int rows(char[][] arr) {
+        return arr.length;
+    }
+
+    public static int cols(int[][] arr, int row) {
+        return arr[row].length;
+    }
+
+    public static int rows(int[][] arr) {
+        return arr.length;
+    }
+
+    public static boolean isInBounds(IntPair coord, int rows, int cols) {
+        return coord.getX() >= 0 && coord.getX() < rows && coord.getY() >= 0 && coord.getY() < cols;
+    }
+
+    public static Stream<IntPair> horizontalVerticalNeighborCoordinates(IntPair coordinate) {
+        return Stream.of(
+                IntPair.of(coordinate.getX() - 1, coordinate.getY()),
+                IntPair.of(coordinate.getX(), coordinate.getY() + 1),
+                IntPair.of(coordinate.getX() + 1, coordinate.getY()),
+                IntPair.of(coordinate.getX(), coordinate.getY() - 1));
+    }
+
+    public static char value(char[][] arr, IntPair coordinate) {
+        return arr[coordinate.getX()][coordinate.getY()];
     }
 }

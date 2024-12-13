@@ -12,6 +12,9 @@ import java.io.IOException;
 import java.util.*;
 import java.util.stream.IntStream;
 
+import static com.japps.adventofcode.util.ProblemSolverUtil.cols;
+import static com.japps.adventofcode.util.ProblemSolverUtil.rows;
+
 public final class Prob8AOC2024 extends AbstractSolvable implements Loggable {
 
     private static final Prob8AOC2024 INSTANCE = instance();
@@ -39,7 +42,7 @@ public final class Prob8AOC2024 extends AbstractSolvable implements Loggable {
         char[][] positions = linesAsArray();
 
         int rows = rows(positions);
-        int cols = cols(positions);
+        int cols = cols(positions, 0);
         Map<Character, List<IntPair>> coordinatesPerCharacter = new HashMap<>();
         IntStream.range(0, rows)
                 .forEach(row -> IntStream.range(0, cols)
@@ -75,13 +78,5 @@ public final class Prob8AOC2024 extends AbstractSolvable implements Loggable {
 
     private static boolean isValidLine(IntPair antennaCoordinate1, IntPair antennaCoordinate2) {
         return antennaCoordinate1.getX() * antennaCoordinate2.getY() == antennaCoordinate1.getY() * antennaCoordinate2.getX();
-    }
-
-    private static int cols(char[][] positions) {
-        return positions[0].length;
-    }
-
-    private static int rows(char[][] positions) {
-        return positions.length;
     }
 }

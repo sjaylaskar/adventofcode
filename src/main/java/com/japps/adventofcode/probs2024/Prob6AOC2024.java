@@ -7,6 +7,7 @@ package com.japps.adventofcode.probs2024;
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.IntPair;
 import com.japps.adventofcode.util.Loggable;
+import com.japps.adventofcode.util.ProblemSolverUtil;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -81,18 +82,10 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
         guardTraversalLoopObstaclePositions(GuardPositionDirection.of(startingGuardPosition, startingGuardDirection), labMap, guardPositionsTraversed);
     }
 
-    private static int cols(char[][] labMap) {
-        return labMap[0].length;
-    }
-
-    private static int rows(char[][] labMap) {
-        return labMap.length;
-    }
-
     private static IntPair startingGuardPosition(char[][] labMap) {
         IntPair startingGuardPosition = IntPair.of(-1, -1);
         outer:
-        for (int i = 0; i < rows(labMap); i++) {
+        for (int i = 0; i < ProblemSolverUtil.rows(labMap); i++) {
             for (int j = 0; j < labMap[i].length; j++) {
                 if (isGuard(labMap, i, j)) {
                     startingGuardPosition = IntPair.of(i, j);
@@ -116,13 +109,13 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
                         case WEST -> IntPair.of(guardPosition.getX(), guardPosition.getY() - 1);
                         case SOUTH -> IntPair.of(guardPosition.getX() + 1, guardPosition.getY());
                     };
-            if (isObstacle(labMap, guardPosition, rows(labMap), cols(labMap))) {
+            if (isObstacle(labMap, guardPosition, ProblemSolverUtil.rows(labMap), ProblemSolverUtil.cols(labMap, 0))) {
                 guardPosition = revertToNonObstaclePosition(guardDirection, guardPosition);
                 guardDirection = guardDirection.nextDirection();
             } else {
                 guardPositions.add(guardPosition);
             }
-            if (isGuardTraversalDone(guardDirection, guardPosition, rows(labMap), cols(labMap))) {
+            if (isGuardTraversalDone(guardDirection, guardPosition, ProblemSolverUtil.rows(labMap), ProblemSolverUtil.cols(labMap, 0))) {
                 guardPositions.add(guardPosition);
                 break;
             }
@@ -147,7 +140,7 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
                             case WEST -> IntPair.of(guardPosition.getX(), guardPosition.getY() - 1);
                             case SOUTH -> IntPair.of(guardPosition.getX() + 1, guardPosition.getY());
                         };
-                if (isObstacle(labMap, guardPosition, rows(labMap), cols(labMap))) {
+                if (isObstacle(labMap, guardPosition, ProblemSolverUtil.rows(labMap), ProblemSolverUtil.cols(labMap, 0))) {
                     guardPosition = revertToNonObstaclePosition(guardDirection, guardPosition);
                     guardDirection = guardDirection.nextDirection();
                 } else {
@@ -156,7 +149,7 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
                         break;
                     }
                 }
-                if (isGuardTraversalDone(guardDirection, guardPosition, rows(labMap), cols(labMap))) {
+                if (isGuardTraversalDone(guardDirection, guardPosition, ProblemSolverUtil.rows(labMap), ProblemSolverUtil.cols(labMap, 0))) {
                     break;
                 }
             }
