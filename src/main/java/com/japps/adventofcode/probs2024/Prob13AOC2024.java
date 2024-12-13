@@ -10,6 +10,7 @@ import com.japps.adventofcode.util.SimultaneousDoubleLinearEquationSolver;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,8 +38,8 @@ public final class Prob13AOC2024 extends AbstractSolvable implements Loggable {
 
     private void compute() throws IOException {
 		List<String> lines = lines();
-        println("Cost: " + compute(lines, true));
-        println("Cost: " + compute(lines, false));
+        println("Cost: " + BigDecimal.valueOf(compute(lines, true)));
+        println("Cost: " + BigDecimal.valueOf(compute(lines, false)));
     }
 
     private double compute(List<String> lines, boolean isBounded) {
