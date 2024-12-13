@@ -6,13 +6,12 @@ package com.japps.adventofcode.probs2024;
 
 import com.japps.adventofcode.util.AbstractSolvable;
 import com.japps.adventofcode.util.Loggable;
-import com.japps.adventofcode.util.SimultaneousDoubleLinearEquationSolver;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.japps.adventofcode.util.MathUtil.*;
 
 public final class Prob13AOC2024 extends AbstractSolvable implements Loggable {
 
@@ -38,8 +37,8 @@ public final class Prob13AOC2024 extends AbstractSolvable implements Loggable {
 
     private void compute() throws IOException {
 		List<String> lines = lines();
-        println("Cost: " + BigDecimal.valueOf(compute(lines, true)));
-        println("Cost: " + BigDecimal.valueOf(compute(lines, false)));
+        println("Cost: " + toBigD(compute(lines, true)));
+        println("Cost: " + toBigD(compute(lines, false)));
     }
 
     private double compute(List<String> lines, boolean isBounded) {
@@ -68,7 +67,7 @@ public final class Prob13AOC2024 extends AbstractSolvable implements Loggable {
     private double[] solve(EquationParam equationParam) {
         double[] roots = null;
         try {
-             roots = SimultaneousDoubleLinearEquationSolver.solve(
+             roots = solveDoubleSimultaneousLinearEquationsInTwoVariables(
                      new double[]{equationParam.buttonACoeffs()[0], equationParam.buttonACoeffs()[1]},
                      new double[]{equationParam.buttonBCoeffs()[0], equationParam.buttonBCoeffs()[1]},
                      new double[]{equationParam.prizeCoeffs()[0], equationParam.prizeCoeffs()[1]});
@@ -89,17 +88,7 @@ public final class Prob13AOC2024 extends AbstractSolvable implements Loggable {
     }
 
     private static boolean isValidRoots(double[] roots, boolean isBounded) {
-        return ArrayUtils.isNotEmpty(roots)
-                && roots.length == 2 && isPositiveRoots(roots) && (!isBounded || isInBounds(roots, 100))
-                && Math.floor(roots[0]) == roots[0] && Math.floor(roots[1]) == roots[1];
-    }
-
-    private static boolean isInBounds(double[] roots, int bound) {
-        return roots[0] <= bound && roots[1] <= bound;
-    }
-
-    private static boolean isPositiveRoots(double[] roots) {
-        return roots[0] >= 0 && roots[1] >= 0;
+        return containsXYRoots(roots) && isNonNegativeRoots(roots) && (!isBounded || isInclusivelyUpperBounded(roots, 100)) && isWholeNumberRoots(roots);
     }
 
     private record EquationParam(double[] buttonACoeffs, double[] buttonBCoeffs, double[] prizeCoeffs){
