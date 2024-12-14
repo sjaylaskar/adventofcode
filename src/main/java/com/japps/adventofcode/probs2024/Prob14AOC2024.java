@@ -78,7 +78,7 @@ public final class Prob14AOC2024 extends AbstractSolvable implements Loggable {
             for (int r = 0; r < rowBuilders.size() - 1; r++) {
                 if (rowBuilders.get(r).toString().contains(PATTERN_BASE_MINUS_1_CHRISTMAS_TREE)
                     && rowBuilders.get(r + 1).toString().contains(PATTERN_BASE_CHRISTMAS_TREE)) {
-                    println("TIME: t = " + 100 + t);
+                    println("TIME: t = " + (100 + t));
                     break outer;
                 }
             }
