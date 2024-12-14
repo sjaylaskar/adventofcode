@@ -11,11 +11,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.japps.adventofcode.util.ArrayUtil.sOf;
 import static com.japps.adventofcode.util.MathUtil.*;
 
 public final class Prob13AOC2024 extends AbstractSolvable implements Loggable {
 
     private static final Prob13AOC2024 INSTANCE = instance();
+    private static final double ADDITIONAL_COORDINATE_DIFF = 10000000000000d;
 
     private Prob13AOC2024() {
 
@@ -83,7 +85,7 @@ public final class Prob13AOC2024 extends AbstractSolvable implements Loggable {
         return new EquationParam(
                 new double[] {Double.parseDouble(buttonALine.substring(buttonALine.indexOf("X+") + 2, buttonALine.indexOf(','))), Double.parseDouble(buttonALine.substring(buttonALine.indexOf("Y+") + 2))},
                 new double[] {Double.parseDouble(buttonBLine.substring(buttonBLine.indexOf("X+") + 2, buttonBLine.indexOf(','))), Double.parseDouble(buttonBLine.substring(buttonBLine.indexOf("Y+") + 2))},
-                new double[] {isBounded ? prizeX : (10000000000000d + prizeX), isBounded ? prizeY : (10000000000000d + prizeY)}
+                new double[] {isBounded ? prizeX : (ADDITIONAL_COORDINATE_DIFF + prizeX), isBounded ? prizeY : (ADDITIONAL_COORDINATE_DIFF + prizeY)}
         );
     }
 
@@ -95,9 +97,9 @@ public final class Prob13AOC2024 extends AbstractSolvable implements Loggable {
         @Override
         public String toString() {
             return "EquationParam{" +
-                    "buttonACoeffs=" + Arrays.toString(buttonACoeffs) +
-                    ", buttonBCoeffs=" + Arrays.toString(buttonBCoeffs) +
-                    ", prizeCoeffs=" + Arrays.toString(prizeCoeffs) +
+                    "buttonACoeffs=" + sOf(buttonACoeffs) +
+                    ", buttonBCoeffs=" + sOf(buttonBCoeffs) +
+                    ", prizeCoeffs=" + sOf(prizeCoeffs) +
                     '}';
         }
     }

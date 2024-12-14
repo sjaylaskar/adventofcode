@@ -10,7 +10,8 @@ import com.japps.adventofcode.util.Loggable;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Stream;
+
+import static com.japps.adventofcode.util.ProblemSolverUtil.*;
 
 public final class Prob10AOC2024 extends AbstractSolvable implements Loggable {
 
@@ -43,8 +44,8 @@ public final class Prob10AOC2024 extends AbstractSolvable implements Loggable {
         Map<IntPair, Set<IntPair>> trailHeadScoreByCoordinates = new HashMap<>();
         Map<IntPair, Long> trailHeadRatingsByCoordinates = new HashMap<>();
         Set<IntPair> validTrailHeadCoordinates = new HashSet<>();
-        for (int i = 0; i < trailMap.length; i++) {
-            for (int j = 0; j < trailMap[i].length; j++) {
+        for (int i = 0; i < rows(trailMap); i++) {
+            for (int j = 0; j < cols(trailMap, i); j++) {
                 if (trailMap[i][j] == 0) {
                     IntPair coordinate = IntPair.of(i, j);
                     trailHeadRatingsByCoordinates.computeIfAbsent(
@@ -57,16 +58,11 @@ public final class Prob10AOC2024 extends AbstractSolvable implements Loggable {
     }
 
     private List<IntPair> computeValidNeighbors(int value, IntPair coordinate, int[][] trailMap) {
-        return Stream.of(
-                IntPair.of(coordinate.getX() - 1, coordinate.getY()),
-                IntPair.of(coordinate.getX(), coordinate.getY() + 1),
-                IntPair.of(coordinate.getX() + 1, coordinate.getY()),
-                IntPair.of(coordinate.getX(), coordinate.getY() - 1))
-                .filter(coord -> isValidCoordinate(coord, value, trailMap)).toList();
+        return horizontalVerticalNeighborCoordinates(coordinate).filter(coord -> isValidCoordinate(coord, value, trailMap)).toList();
     }
 
     private boolean isValidCoordinate(IntPair coord, int value, int[][] trailMap) {
-        return (coord.getX() >= 0 && coord.getX() < trailMap.length && coord.getY() >= 0 && coord.getY() < trailMap[0].length)
+        return isInBounds(coord, rows(trailMap), cols(trailMap, 0))
                 && (trailMap[coord.getX()][coord.getY()] == value + 1);
     }
 

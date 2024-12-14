@@ -7,6 +7,7 @@ package com.japps.adventofcode.util;
 
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -103,5 +104,9 @@ public final class ProblemSolverUtil implements Loggable {
 
     public static char value(char[][] arr, IntPair coordinate) {
         return arr[coordinate.getX()][coordinate.getY()];
+    }
+
+    public static int mid(int edge) {
+        return (edge - 1) / 2;
     }
 }
