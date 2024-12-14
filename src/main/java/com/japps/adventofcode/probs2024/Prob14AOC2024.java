@@ -40,6 +40,10 @@ public final class Prob14AOC2024 extends AbstractSolvable implements Loggable {
     private static final int ROWS = 103;
     private static final int COLS = 101;
     private static final int COUNT_OF_MOVES = 100;
+    private static final String PATTERN_ROBOT = "O";
+    private static final String PATTERN_DOT = ".";
+    private static final String PATTERN_BASE_MINUS_1_CHRISTMAS_TREE = "OOOOOOOOOO";
+    private static final String PATTERN_BASE_CHRISTMAS_TREE = "OOOOOOOOOOO";
 
     private void compute() throws IOException {
 		List<String> lines = lines();
@@ -47,6 +51,43 @@ public final class Prob14AOC2024 extends AbstractSolvable implements Loggable {
         for (String line : lines) {
             robots.add(robot(line));
         }
+        computeSafetyFactor(robots);
+        computeChristmasTree(robots);
+    }
+
+    private void computeChristmasTree(List<Robot> robots) {
+        outer: for (int t = 0; t < ROWS * COLS; t++) {
+            System.out.println("Map: t = " + t);
+            System.out.println("************************************************************************************\n");
+            List<StringBuilder> rowBuilders = new ArrayList<>();
+            for (int i = 0; i < ROWS; i++) {
+                StringBuilder rowBuilder = new StringBuilder();
+                for (int j = 0; j < COLS; j++) {
+                    IntPair position = IntPair.of(i, j);
+                    if (robots.stream().anyMatch(robot -> robot.isInPosition(position))) {
+                        rowBuilder.append(PATTERN_ROBOT);
+                        System.out.print(PATTERN_ROBOT);
+                    } else {
+                        rowBuilder.append(PATTERN_DOT);
+                        System.out.print(PATTERN_DOT);
+                    }
+                }
+                rowBuilders.add(rowBuilder);
+                System.out.println();
+            }
+            for (int r = 0; r < rowBuilders.size() - 1; r++) {
+                if (rowBuilders.get(r).toString().contains(PATTERN_BASE_MINUS_1_CHRISTMAS_TREE)
+                    && rowBuilders.get(r + 1).toString().contains(PATTERN_BASE_CHRISTMAS_TREE)) {
+                    println("TIME: t = " + 100 + t);
+                    break outer;
+                }
+            }
+            robots.forEach(robot -> robot.move(ROWS, COLS));
+            System.out.println("************************************************************************************\n");
+        }
+    }
+
+    private void computeSafetyFactor(List<Robot> robots) {
         robots.forEach(this::move);
         long firstQuadrantCount = 0;
         long secondQuadrantCount = 0;
@@ -68,7 +109,6 @@ public final class Prob14AOC2024 extends AbstractSolvable implements Loggable {
                 }
             }
         }
-
         println(firstQuadrantCount * secondQuadrantCount * thirdQuadrantCount * fourthQuadrantCount);
     }
 
@@ -78,6 +118,10 @@ public final class Prob14AOC2024 extends AbstractSolvable implements Loggable {
 
     private void move(Robot robot) {
         IntStream.rangeClosed(1, COUNT_OF_MOVES).forEach(_ -> robot.move(ROWS, COLS));
+    }
+
+    private void move(Robot robot, int countOfMoves) {
+        IntStream.rangeClosed(1, countOfMoves).forEach(_ -> robot.move(ROWS, COLS));
     }
 
     private Robot robot(String line) {
@@ -125,6 +169,10 @@ public final class Prob14AOC2024 extends AbstractSolvable implements Loggable {
 
         int columnVelocity() {
             return columnVelocity;
+        }
+
+        boolean isInPosition(IntPair position) {
+            return this.position().equals(position);
         }
 
         void move(int rowEdge, int colEdge) {
