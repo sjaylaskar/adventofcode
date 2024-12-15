@@ -109,4 +109,8 @@ public final class ProblemSolverUtil implements Loggable {
     public static int mid(int edge) {
         return (edge - 1) / 2;
     }
+
+    public static void print(char[][] arr) {
+        IntStream.range(0, rows(arr)).forEach(row -> System.out.println(Arrays.toString(arr[row])));
+    }
 }
