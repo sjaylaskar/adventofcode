@@ -9,6 +9,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -28,6 +29,8 @@ public final class ProblemSolverUtil implements Loggable {
 
     /** The src main resources. */
     private static final String SRC_MAIN_RESOURCES = "src/main/resources/";
+
+    public static final String COMMA = ",";
 
     /**
      * Instantiates a new problem solver util.
@@ -102,6 +105,14 @@ public final class ProblemSolverUtil implements Loggable {
                 IntPair.of(coordinate.getX(), coordinate.getY() - 1));
     }
 
+    public static Stream<PositionDirection> toNeighborPositionDirections(PositionDirection positionDirection) {
+        return Stream.of(
+                PositionDirection.of(IntPair.of(positionDirection.position().getX() - 1, positionDirection.position().getY()), Direction.NORTH),
+                PositionDirection.of(IntPair.of(positionDirection.position().getX(), positionDirection.position().getY() + 1), Direction.EAST),
+                PositionDirection.of(IntPair.of(positionDirection.position().getX() + 1, positionDirection.position().getY()), Direction.SOUTH),
+                PositionDirection.of(IntPair.of(positionDirection.position().getX(), positionDirection.position().getY() - 1), Direction.WEST));
+    }
+
     public static char value(char[][] arr, IntPair coordinate) {
         return arr[coordinate.getX()][coordinate.getY()];
     }
@@ -112,5 +123,9 @@ public final class ProblemSolverUtil implements Loggable {
 
     public static void print(char[][] arr) {
         IntStream.range(0, rows(arr)).forEach(row -> System.out.println(Arrays.toString(arr[row])));
+    }
+
+    public static String commify(List<?> list) {
+        return list.stream().map(String::valueOf).collect(Collectors.joining(COMMA));
     }
 }

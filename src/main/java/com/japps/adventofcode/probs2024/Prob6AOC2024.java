@@ -4,14 +4,10 @@
  */
 package com.japps.adventofcode.probs2024;
 
-import com.japps.adventofcode.util.AbstractSolvable;
-import com.japps.adventofcode.util.IntPair;
-import com.japps.adventofcode.util.Loggable;
-import com.japps.adventofcode.util.ProblemSolverUtil;
+import com.japps.adventofcode.util.*;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
@@ -40,46 +36,17 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
     private static final char OBSTACLE = '#';
     private static final char EMPTY = '.';
 
-    private enum DIRECTION {
-        NORTH, EAST, WEST, SOUTH;
-
-        static boolean isNorth(DIRECTION direction) {
-            return NORTH.equals(direction);
-        }
-
-        static boolean isEast(DIRECTION direction) {
-            return EAST.equals(direction);
-        }
-
-        static boolean isWest(DIRECTION direction) {
-            return WEST.equals(direction);
-        }
-
-        static boolean isSouth(DIRECTION direction) {
-            return SOUTH.equals(direction);
-        }
-
-        DIRECTION nextDirection() {
-            return switch (this) {
-                case NORTH -> EAST;
-                case EAST -> SOUTH;
-                case SOUTH -> WEST;
-                case WEST -> NORTH;
-            };
-        }
-    }
-
     private void compute() throws IOException {
         char[][] labMap = linesAsArray();
 
-        DIRECTION startingGuardDirection = DIRECTION.NORTH;
+        Direction startingGuardDirection = Direction.NORTH;
         IntPair startingGuardPosition = startingGuardPosition(labMap);
 
         Set<IntPair> guardPositionsTraversed = new HashSet<>();
         guardPositionsTraversed.add(startingGuardPosition);
         guardTraversalPositions(IntPair.of(startingGuardPosition), startingGuardDirection, labMap, guardPositionsTraversed);
 
-        guardTraversalLoopObstaclePositions(GuardPositionDirection.of(startingGuardPosition, startingGuardDirection), labMap, guardPositionsTraversed);
+        guardTraversalLoopObstaclePositions(PositionDirection.of(startingGuardPosition, startingGuardDirection), labMap, guardPositionsTraversed);
     }
 
     private static IntPair startingGuardPosition(char[][] labMap) {
@@ -100,7 +67,7 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
         return labMap[i][j] == GUARD;
     }
 
-    private void guardTraversalPositions(IntPair guardPosition, DIRECTION guardDirection, char[][] labMap, Set<IntPair> guardPositions) {
+    private void guardTraversalPositions(IntPair guardPosition, Direction guardDirection, char[][] labMap, Set<IntPair> guardPositions) {
         while (true) {
             guardPosition =
                     switch (guardDirection) {
@@ -123,15 +90,15 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
         println(guardPositions.size());
     }
 
-    private void guardTraversalLoopObstaclePositions(GuardPositionDirection startingGuardPositionDirection, char[][] labMap, Set<IntPair> guardPositions) {
+    private void guardTraversalLoopObstaclePositions(PositionDirection startingPositionDirection, char[][] labMap, Set<IntPair> guardPositions) {
         int countLoopingObstaclePositions = 0;
-        Set<IntPair> newObstaclePositions = newObstaclePositions(startingGuardPositionDirection.position(), labMap, guardPositions);
+        Set<IntPair> newObstaclePositions = newObstaclePositions(startingPositionDirection.position(), labMap, guardPositions);
         for (IntPair newObstaclePosition : newObstaclePositions) {
             labMap[newObstaclePosition.getX()][newObstaclePosition.getY()] = OBSTACLE;
-            IntPair guardPosition = IntPair.of(startingGuardPositionDirection.position());
-            DIRECTION guardDirection = DIRECTION.NORTH;
-            Set<GuardPositionDirection> guardPositionDirections = new HashSet<>();
-            guardPositionDirections.add(startingGuardPositionDirection);
+            IntPair guardPosition = IntPair.of(startingPositionDirection.position());
+            Direction guardDirection = Direction.NORTH;
+            Set<PositionDirection> positionDirections = new HashSet<>();
+            positionDirections.add(startingPositionDirection);
             while (true) {
                 guardPosition =
                         switch (guardDirection) {
@@ -144,7 +111,7 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
                     guardPosition = revertToNonObstaclePosition(guardDirection, guardPosition);
                     guardDirection = guardDirection.nextDirection();
                 } else {
-                    if (!guardPositionDirections.add(GuardPositionDirection.of(guardPosition, guardDirection))) {
+                    if (!positionDirections.add(PositionDirection.of(guardPosition, guardDirection))) {
                         countLoopingObstaclePositions++;
                         break;
                     }
@@ -168,7 +135,7 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
         return newObstacleOptions;
     }
 
-    private IntPair revertToNonObstaclePosition(DIRECTION guardDirection, IntPair guardPosition) {
+    private IntPair revertToNonObstaclePosition(Direction guardDirection, IntPair guardPosition) {
         return switch (guardDirection) {
             case NORTH -> IntPair.of(guardPosition.getX() + 1, guardPosition.getY());
             case EAST -> IntPair.of(guardPosition.getX(), guardPosition.getY() - 1);
@@ -188,30 +155,11 @@ public final class Prob6AOC2024 extends AbstractSolvable implements Loggable {
         return labMap[x][y] == OBSTACLE;
     }
 
-    private static boolean isGuardTraversalDone(DIRECTION guardDirection, IntPair guardPosition, int rows, int cols) {
-        return (DIRECTION.isNorth(guardDirection) && guardPosition.getX() <= 0)
-                || (DIRECTION.isEast(guardDirection) && guardPosition.getY() >= cols - 1)
-                || (DIRECTION.isSouth(guardDirection) && guardPosition.getX() >= rows - 1)
-                || (DIRECTION.isWest(guardDirection) && guardPosition.getY() <= 0);
+    private static boolean isGuardTraversalDone(Direction guardDirection, IntPair guardPosition, int rows, int cols) {
+        return (Direction.isNorth(guardDirection) && guardPosition.getX() <= 0)
+                || (Direction.isEast(guardDirection) && guardPosition.getY() >= cols - 1)
+                || (Direction.isSouth(guardDirection) && guardPosition.getX() >= rows - 1)
+                || (Direction.isWest(guardDirection) && guardPosition.getY() <= 0);
     }
 
-    private record GuardPositionDirection(IntPair position, DIRECTION direction) {
-            private GuardPositionDirection(IntPair position, DIRECTION direction) {
-                this.position = IntPair.of(position);
-                this.direction = direction;
-            }
-
-            static GuardPositionDirection of(IntPair position, DIRECTION direction) {
-                return new GuardPositionDirection(position, direction);
-            }
-
-            @Override
-            public boolean equals(Object o) {
-                if (this == o) return true;
-                if (o == null || getClass() != o.getClass()) return false;
-                GuardPositionDirection that = (GuardPositionDirection) o;
-                return Objects.equals(position, that.position) && direction == that.direction;
-            }
-
-    }
 }
