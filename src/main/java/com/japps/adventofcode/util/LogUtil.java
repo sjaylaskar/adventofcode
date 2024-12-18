@@ -67,4 +67,8 @@ public final class LogUtil {
     public void println(final Object object) {
         System.out.println(object);
     }
+
+    public void println() {
+        System.out.println();
+    }
 }

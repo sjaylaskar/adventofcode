@@ -32,6 +32,8 @@ public final class ProblemSolverUtil implements Loggable {
 
     public static final String COMMA = ",";
 
+    private static final LogUtil LOG = LogUtil.newInstance(ProblemSolverUtil.class);
+
     /**
      * Instantiates a new problem solver util.
      */
@@ -77,6 +79,14 @@ public final class ProblemSolverUtil implements Loggable {
         return IntStream.range(0, line.length).map(index -> Integer.parseInt(String.valueOf(line[index]))).toArray();
     }
 
+    public static int cols(Object[][] arr, int row) {
+        return arr[row].length;
+    }
+
+    public static int rows(Object[][] arr) {
+        return arr.length;
+    }
+
     public static int cols(char[][] arr, int row) {
         return arr[row].length;
     }
@@ -117,15 +127,54 @@ public final class ProblemSolverUtil implements Loggable {
         return arr[coordinate.getX()][coordinate.getY()];
     }
 
+    public static Object value(Object[][] arr, IntPair coordinate) {
+        return arr[coordinate.getX()][coordinate.getY()];
+    }
+
+    public static void setValue(Object[][] arr, IntPair coordinate, Object value) {
+        arr[coordinate.getX()][coordinate.getY()] = value;
+    }
+
+    public static void setValue(char[][] arr, IntPair coordinate, char value) {
+        arr[coordinate.getX()][coordinate.getY()] = value;
+    }
+
     public static int mid(int edge) {
         return (edge - 1) / 2;
     }
 
     public static void print(char[][] arr) {
-        IntStream.range(0, rows(arr)).forEach(row -> System.out.println(Arrays.toString(arr[row])));
+        IntStream.range(0, rows(arr)).forEach(row -> LOG.println(Arrays.toString(arr[row])));
+    }
+
+    public static void print(Object[][] arr) {
+        IntStream.range(0, rows(arr)).forEach(row -> LOG.println(Arrays.toString(arr[row])));
+    }
+
+    public static void print(int[][] arr) {
+        IntStream.range(0, rows(arr)).forEach(row -> LOG.println(Arrays.toString(arr[row])));
+    }
+
+    public static void print(int[] arr) {
+        LOG.println(Arrays.toString(arr));
     }
 
     public static String commify(List<?> list) {
         return list.stream().map(String::valueOf).collect(Collectors.joining(COMMA));
+    }
+
+    public static void fill(char[][] arr, char c) {
+        IntStream.range(0, rows(arr)).forEach(row -> Arrays.fill(arr[row], c));
+    }
+
+    public static Object[][] toObjects(char[][] chars) {
+        Object[][] objects = new Object[rows(chars)][];
+        for (int i = 0; i < rows(chars); i++) {
+            objects[i] = new Object[cols(chars, i)];
+            for (int j = 0; j < cols(chars, i); j++) {
+                objects[i][j] = chars[i][j];
+            }
+        }
+        return objects;
     }
 }

@@ -46,6 +46,10 @@ public interface Loggable {
         LogUtil.newInstance(getClass()).println(object);
     }
 
+    default void println() {
+        LogUtil.newInstance(getClass()).println();
+    }
+
     /**
      * Info.
      *
