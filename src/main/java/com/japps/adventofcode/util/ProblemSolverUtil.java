@@ -5,13 +5,10 @@
 */
 package com.japps.adventofcode.util;
 
-import org.apache.commons.lang3.math.NumberUtils;
+import java.util.*;
+import java.util.stream.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
+import org.apache.commons.lang3.math.*;
 
 /**
  * The problem solver util.

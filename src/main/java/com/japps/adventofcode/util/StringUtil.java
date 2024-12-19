@@ -5,10 +5,10 @@
  */
 package com.japps.adventofcode.util;
 
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.*;
 
-import org.apache.commons.lang3.math.NumberUtils;
+import org.apache.commons.lang3.math.*;
 
 
 /**
@@ -65,4 +65,35 @@ public final class StringUtil {
         return Integer.parseInt(String.valueOf(c));
     }
 
+    /**
+     * Indicates if the {@code stringLine} can be constructed from the provided {@code tokens}.
+     *
+     * @param stringLine The string line.
+     * @param tokens The tokens.
+     * @return {@code true}, if the {@code stringLine} can be constructed from the provided {@code tokens}.
+     */
+    public static boolean isConstructable(String stringLine, Set<String> tokens) {
+        boolean[] memo = new boolean[stringLine.length() + 1];
+        memo[0] = true;
+        IntStream.rangeClosed(1, stringLine.length())
+                .filter(index -> tokens.stream().anyMatch(token -> index >= token.length() && memo[index - token.length()] && stringLine.startsWith(token, index - token.length())))
+                .forEach(index -> memo[index] = true);
+        return memo[stringLine.length()];
+    }
+
+    /**
+     * Counts the number of ways that the {@code stringLine} can be constructed from the provided {@code tokens}.
+     *
+     * @param stringLine The string line.
+     * @param tokens The tokens.
+     * @return The number of ways that the {@code stringLine} can be constructed from the provided {@code tokens}. <i>0, if its not possible.</i>
+     */
+    public static long constructableWays(String stringLine, Set<String> tokens) {
+        long[] memo = new long[stringLine.length() + 1];
+        memo[0] = 1;
+        IntStream.rangeClosed(1, stringLine.length())
+                .forEach(index -> tokens.stream().filter(token -> index >= token.length() && memo[index - token.length()] > 0 && stringLine.startsWith(token, index - token.length()))
+                        .forEach(token -> memo[index] += memo[index - token.length()]));
+        return memo[stringLine.length()];
+    }
 }
