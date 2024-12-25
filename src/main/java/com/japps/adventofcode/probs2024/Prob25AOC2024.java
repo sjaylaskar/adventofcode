@@ -48,27 +48,12 @@ public final class Prob25AOC2024 extends AbstractSolvable implements Loggable {
                 keys.add(buildCombination(lockOrKey));
             }
         }
-        
-        println(findFitPairs(locks, keys));
+
+        println(locks.stream().mapToLong(lock -> keys.stream().filter(key -> isFitPair(lock, key)).count()).sum());
     }
 
-    private static int findFitPairs(List<String> locks, List<String> keys) {
-        int fitPairs = 0;
-        for (String lock : locks) {
-            for (String key : keys) {
-                boolean isFit = true;
-                for (int i = 0; i < key.length(); i++) {
-                    if (Integer.parseInt(String.valueOf(lock.charAt(i))) + Integer.parseInt(String.valueOf(key.charAt(i))) > key.length()) {
-                        isFit = false;
-                        break;
-                    }
-                }
-                if (isFit) {
-                    fitPairs++;
-                }
-            }
-        }
-        return fitPairs;
+    private static boolean isFitPair(String lock, String key) {
+        return IntStream.range(0, key.length()).allMatch(columnIndex -> Integer.parseInt(String.valueOf(lock.charAt(columnIndex))) + Integer.parseInt(String.valueOf(key.charAt(columnIndex))) <= key.length());
     }
 
     private String buildCombination(List<String> lockOrKey) {
