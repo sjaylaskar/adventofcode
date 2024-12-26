@@ -36,7 +36,7 @@ public final class StringUtil {
 
         final char[] strChars = str.toCharArray();
         Arrays.sort(strChars);
-        return new String(strChars);
+        return String.valueOf(strChars);
     }
 
 
@@ -95,5 +95,9 @@ public final class StringUtil {
                 .forEach(index -> tokens.stream().filter(token -> index >= token.length() && memo[index - token.length()] > 0 && stringLine.startsWith(token, index - token.length()))
                         .forEach(token -> memo[index] += memo[index - token.length()]));
         return memo[stringLine.length()];
+    }
+
+    public static String sortedDelimited(List<String> strings, String delimiter) {
+        return String.join(delimiter, strings.stream().sorted().toList());
     }
 }
