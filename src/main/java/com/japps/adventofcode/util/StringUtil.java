@@ -100,4 +100,8 @@ public final class StringUtil {
     public static String sortedDelimited(List<String> strings, String delimiter) {
         return String.join(delimiter, strings.stream().sorted().toList());
     }
+
+    public static String stringify(List<Object> objects, String delimiter) {
+        return String.join(delimiter, objects.stream().map(Object::toString).toList());
+    }
 }

@@ -125,4 +125,12 @@ public class IntPair implements Comparable<IntPair> {
         int compare = Integer.compare(this.getX(), other.getX());
         return compare == 0 ? Integer.compare(this.getY(), other.getY()) : compare;
     }
+
+	public boolean lessThan(IntPair other) {
+		return (this.getX() < other.getX() && this.getY() < other.getY());
+	}
+
+	public int distance() {
+		return Math.abs(this.getY() - this.getX());
+	}
 }

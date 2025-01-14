@@ -174,4 +174,10 @@ public final class ProblemSolverUtil implements Loggable {
         }
         return objects;
     }
+
+    public static <T> List<Object> toObjects(List<T> elements) {
+        List<Object> objects = new ArrayList<>(elements.size());
+		objects.addAll(elements);
+        return objects;
+    }
 }

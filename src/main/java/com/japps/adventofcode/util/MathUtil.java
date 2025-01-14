@@ -10,6 +10,7 @@ package com.japps.adventofcode.util;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.math.BigDecimal;
+import java.util.function.*;
 
 public final class MathUtil {
 
@@ -39,5 +40,13 @@ public final class MathUtil {
 
     public static BigDecimal toBigD(double value) {
         return BigDecimal.valueOf(value);
+    }
+
+    public static IntPredicate oddPredicate() {
+        return num -> num % 2 != 0;
+    }
+
+    public static IntPredicate evenPredicate() {
+        return oddPredicate().negate();
     }
 }
